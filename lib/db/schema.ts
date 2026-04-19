@@ -48,7 +48,7 @@ export const users = pgTable('users', {
 // ─── CATEGORIES ───────────────────────────────────────────
 export const categories = pgTable('categories', {
   id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
+  name: text('name').unique().notNull(),
   icon: text('icon'),
   displayOrder: integer('display_order').default(0),
   isActive: boolean('is_active').default(true),

@@ -1,44 +1,23 @@
 import { db } from './index'
-import { users, categories, restaurantInfo } from './schema'
+import { users, categories, dishes, restaurantInfo } from './schema'
 import bcrypt from 'bcryptjs'
 
 async function seed() {
   console.log('🌱 Seeding database...')
 
-  // 1. Clear existing data (optional, but good for clean seed)
-  // await db.delete(users)
-  // await db.delete(categories)
-  // await db.delete(restaurantInfo)
-
-  // 2. Hash passwords
+  // 1. Hash passwords
   const adminPassword = await bcrypt.hash('Admin@123', 10)
-  const receptionPassword = await bcrypt.hash('Reception@123', 10)
-  const kitchenPassword = await bcrypt.hash('Kitchen@123', 10)
+  const staffPassword = await bcrypt.hash('Staff@123', 10)
 
-  // 3. Insert Users
+  // 2. Insert Users
   console.log('👤 Inserting users...')
   await db.insert(users).values([
-    {
-      name: 'Admin User',
-      email: 'admin@swadanusar.com',
-      passwordHash: adminPassword,
-      role: 'admin',
-    },
-    {
-      name: 'Reception User',
-      email: 'reception@swadanusar.com',
-      passwordHash: receptionPassword,
-      role: 'reception',
-    },
-    {
-      name: 'Kitchen User',
-      email: 'kitchen@swadanusar.com',
-      passwordHash: kitchenPassword,
-      role: 'kitchen',
-    },
+    { name: 'Admin User', email: 'admin@swadanusar.com', passwordHash: adminPassword, role: 'admin' },
+    { name: 'Reception User', email: 'reception@swadanusar.com', passwordHash: staffPassword, role: 'reception' },
+    { name: 'Kitchen User', email: 'kitchen@swadanusar.com', passwordHash: staffPassword, role: 'kitchen' },
   ]).onConflictDoNothing()
 
-  // 4. Insert Restaurant Info
+  // 3. Insert Restaurant Info
   console.log('🏠 Inserting restaurant info...')
   await db.insert(restaurantInfo).values({
     name: 'Swad Anusar',
@@ -48,21 +27,70 @@ async function seed() {
     slug: 'swad-anusar',
   }).onConflictDoNothing()
 
-  // 5. Insert Default Categories
-  console.log('🥘 Inserting categories...')
-  const categoryList = [
-    { name: '🌅 Breakfast', displayOrder: 1 },
-    { name: '🍱 Lunch', displayOrder: 2 },
-    { name: '🌙 Dinner', displayOrder: 3 },
-    { name: '🥗 Starters', displayOrder: 4 },
-    { name: '🍛 Main Course', displayOrder: 5 },
-    { name: '🥪 Snacks', displayOrder: 6 },
-    { name: '🍨 Desserts', displayOrder: 7 },
-    { name: '🥤 Beverages', displayOrder: 8 },
-    { name: '⭐ Chef\'s Special', displayOrder: 9 },
+  // 4. Insert Categories & Dishes
+  console.log('🥘 Seeding categories and dishes...')
+  const cats = [
+    { name: '🌅 Breakfast', order: 1 },
+    { name: '🥗 Starters', order: 2 },
+    { name: '🍛 Main Course', order: 3 },
+    { name: '🥤 Beverages', order: 4 },
   ]
 
-  await db.insert(categories).values(categoryList).onConflictDoNothing()
+  for (const catData of cats) {
+    const [insertedCat] = await db.insert(categories).values({
+      name: catData.name,
+      displayOrder: catData.order,
+      isActive: true,
+    }).returning({ id: categories.id })
+
+    // Add dishes for this category
+    if (catData.name.includes('Breakfast')) {
+      await db.insert(dishes).values([
+        { 
+            categoryId: insertedCat.id, 
+            name: 'Masala Dosa', 
+            description: 'Crispy rice pancake with potato filling', 
+            isVeg: true, 
+            sizes: [{ label: 'Standard', price: 120 }],
+            images: ['https://res.cloudinary.com/dpgabobnc/image/upload/v1713532800/sample_dosa.jpg']
+        },
+        { 
+            categoryId: insertedCat.id, 
+            name: 'Poha Jalebi', 
+            description: 'Indori special beaten rice with sweet jalebi', 
+            isVeg: true, 
+            sizes: [{ label: 'Standard', price: 60 }] 
+        },
+      ])
+    } else if (catData.name.includes('Main Course')) {
+      await db.insert(dishes).values([
+        { 
+            categoryId: insertedCat.id, 
+            name: 'Paneer Butter Masala', 
+            description: 'Creamy tomato based paneer curry', 
+            isVeg: true, 
+            sizes: [{ label: 'Half', price: 180 }, { label: 'Full', price: 320 }] 
+        },
+        { 
+            categoryId: insertedCat.id, 
+            name: 'Dal Makhani', 
+            description: 'Slow cooked black lentils with butter', 
+            isVeg: true, 
+            sizes: [{ label: 'Bowl', price: 150 }] 
+        },
+      ])
+    } else if (catData.name.includes('Starters')) {
+        await db.insert(dishes).values([
+          { 
+              categoryId: insertedCat.id, 
+              name: 'Crispy Corn', 
+              description: 'Deep fried corn tossed with spices', 
+              isVeg: true, 
+              sizes: [{ label: 'Plate', price: 140 }] 
+          },
+        ])
+    }
+  }
 
   console.log('✅ Seeding complete!')
   process.exit(0)
