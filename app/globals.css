@@ -1,52 +1,39 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --primary: #B5451B;
-    --primary-light: #D4622D;
-    --accent: #F4A261;
-    --background: #FFF8F0;
-    --surface: #FFFFFF;
-    --text-primary: #1A0A00;
-    --text-secondary: #6B4226;
-    --success: #2D6A4F;
-    --warning: #E9C46A;
-    --error: #C1121F;
-    --border: #E8D5C4;
-    --radius: 0.625rem;
-  }
-}
+@import "tailwindcss";
 
 @theme {
+  --color-primary: #B5451B;
+  --color-primary-light: #D4622D;
+  --color-accent: #F4A261;
+  --color-background: #FFF8F0;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #1A0A00;
+  --color-text-secondary: #6B4226;
+  --color-success: #2D6A4F;
+  --color-warning: #E9C46A;
+  --color-error: #C1121F;
+  --color-border: #E8D5C4;
+
   --font-playfair: var(--font-playfair), serif;
   --font-poppins: var(--font-poppins), sans-serif;
-  
-  --color-primary: var(--primary);
-  --color-primary-light: var(--primary-light);
-  --color-accent: var(--accent);
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-error: var(--error);
-  --color-border: var(--border);
+  --font-sans: var(--font-poppins), sans-serif;
+
+  --radius-lg: 0.625rem;
 }
 
 @layer base {
   body {
-    @apply antialiased bg-background text-text-primary font-poppins;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-poppins);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
   h1, h2, h3, h4, h5, h6 {
-    @apply font-playfair;
+    font-family: var(--font-playfair);
   }
+
   * {
-    @apply border-border;
+    border-color: var(--color-border);
   }
 }
