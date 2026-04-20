@@ -28,74 +28,78 @@ export default function MenuPage() {
   const activeCategoryData = categories.find(c => c.id === activeCategory)
 
   return (
-    <div className="min-h-screen pb-24 font-poppins bg-background">
-      <div className="mx-auto w-full">
+    <div className="min-h-screen pb-24 font-poppins bg-background flex flex-col">
       {/* Header */}
-      <header className="bg-primary text-white p-6 rounded-b-[2rem] shadow-lg">
-        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+      <header className="bg-primary text-white p-6 md:p-8 rounded-b-[2rem] shadow-lg sticky top-0 z-50">
+        <div className="max-w-[1920px] mx-auto w-full flex justify-between items-center px-4 md:px-8">
           <div>
-            <h1 className="font-playfair text-3xl font-bold italic">Swad Anusar</h1>
-            <div className="flex items-center text-xs opacity-80 mt-1">
+            <h1 className="font-playfair text-3xl md:text-4xl font-bold italic">Swad Anusar</h1>
+            <div className="flex items-center text-xs md:text-sm opacity-80 mt-1">
               <MapPin className="w-3 h-3 mr-1" />
               <span>Govindpuri, Gwalior</span>
             </div>
           </div>
-          <button className="bg-white/20 p-2 rounded-full backdrop-blur-md">
-            <Phone className="w-5 h-5" />
+          <button className="bg-white/20 p-3 rounded-full backdrop-blur-md transition hover:bg-white/30">
+            <Phone className="w-6 h-6" />
           </button>
         </div>
       </header>
 
-      {/* Hero / Banner */}
-      <div className="max-w-7xl mx-auto w-full px-4 mt-6">
-        <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-2xl p-6 md:p-10 text-white overflow-hidden relative shadow-lg">
-            <div className="relative z-10">
-                <h2 className="text-2xl font-bold font-playfair mb-1 drop-shadow-sm">Authentic Flavors</h2>
-                <p className="text-sm opacity-95 max-w-[200px] font-medium">Taste that feels like home, right at your table.</p>
-                <button className="bg-white text-primary px-5 py-2.5 rounded-full mt-4 text-sm font-bold shadow-xl transition hover:scale-105 active:scale-95">
-                    Check Offers
-                </button>
+      <div className="flex flex-col lg:flex-row flex-1 max-w-[1920px] mx-auto w-full md:px-8">
+        {/* Categories - Side Sidebar on Desktop, Top Tabs on Mobile */}
+        <aside className="lg:w-72 lg:sticky lg:top-32 lg:h-[calc(100vh-10rem)] py-6 z-40 bg-background lg:pr-8">
+          <div className="px-4 lg:px-0">
+            <h2 className="hidden lg:block text-xl font-bold font-playfair mb-6 text-primary">Menu Categories</h2>
+            <div className="lg:flex lg:flex-col lg:gap-3">
+                <CategoryTabs 
+                    categories={categories} 
+                    activeId={activeCategory} 
+                    onSelect={setActiveCategory} 
+                    loading={loading}
+                    isVertical={true}
+                />
             </div>
-            <div className="absolute right-[-20px] top-[-20px] bg-white/30 w-48 h-48 rounded-full blur-3xl"></div>
-            <div className="absolute left-[-20px] bottom-[-20px] bg-white/20 w-32 h-32 rounded-full blur-2xl"></div>
-        </div>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 px-4 lg:px-0 mt-6 md:mt-8">
+          {/* Hero / Banner */}
+          <div className="mb-10 lg:mb-12">
+            <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-3xl p-8 md:p-12 text-white overflow-hidden relative shadow-xl min-h-[200px] flex flex-col justify-center">
+                <div className="relative z-10">
+                    <h2 className="text-3xl md:text-5xl font-bold font-playfair mb-4 drop-shadow-md tracking-tight">Authentic Flavors</h2>
+                    <p className="text-base md:text-lg opacity-90 max-w-[400px] font-medium leading-relaxed">Experience a taste that feels like home, right here at your table.</p>
+                </div>
+                <div className="absolute right-[-40px] top-[-40px] bg-white/20 w-80 h-80 rounded-full blur-[100px]"></div>
+                <div className="absolute left-[-40px] bottom-[-40px] bg-white/10 w-60 h-60 rounded-full blur-[80px]"></div>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center mb-8">
+              <h3 className="text-2xl md:text-3xl font-bold font-playfair flex items-center gap-3">
+                  {activeCategoryData?.name || 'Loading Menu...'}
+                  {!loading && (
+                    <span className="text-sm font-normal text-text-secondary bg-[#E8D5C4] px-4 py-1 rounded-full uppercase tracking-wider">
+                        {activeCategoryData?.dishes?.length || 0} Items
+                    </span>
+                  )}
+              </h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8 pb-12">
+              {loading ? (
+                  Array(6).fill(0).map((_, i) => (
+                      <div key={i} className="bg-white rounded-[2.5rem] h-[400px] animate-pulse shadow-sm"></div>
+                  ))
+              ) : (
+                  activeCategoryData?.dishes?.map((dish: any) => (
+                      <DishCard key={dish.id} dish={dish} />
+                  ))
+              )}
+          </div>
+        </main>
       </div>
-
-      {/* Categories */}
-      <div className="sticky top-0 z-40 bg-background pt-4 mt-2">
-        <div className="max-w-7xl mx-auto w-full">
-            <CategoryTabs 
-            categories={categories} 
-            activeId={activeCategory} 
-            onSelect={setActiveCategory} 
-            loading={loading}
-            />
-        </div>
-      </div>
-
-      {/* Dishes */}
-      <main className="max-w-7xl mx-auto w-full px-4 mt-6 flex-1">
-        <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold font-playfair flex items-center">
-                {activeCategoryData?.name || 'All Dishes'}
-                <span className="ml-2 text-xs font-normal text-text-secondary bg-[#E8D5C4] px-2 py-0.5 rounded-full">
-                    {activeCategoryData?.dishes?.length || 0} Items
-                </span>
-            </h3>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-8">
-            {loading ? (
-                Array(4).fill(0).map((_, i) => (
-                    <div key={i} className="bg-white rounded-2xl h-64 animate-pulse"></div>
-                ))
-            ) : (
-                activeCategoryData?.dishes?.map((dish: any) => (
-                    <DishCard key={dish.id} dish={dish} />
-                ))
-            )}
-        </div>
-      </main>
 
       {/* Floating Cart Button */}
       {cart.items.length > 0 && (
