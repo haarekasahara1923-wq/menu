@@ -31,6 +31,35 @@ export default function QRGenerator() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handleDownload = () => {
+    if (!qrBlob) return
+    const a = document.createElement('a')
+    a.href = qrBlob
+    a.download = 'SwadAnusar-Menu-QR.png'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
+  const handleShare = async () => {
+    if (navigator.share && qrBlob) {
+      try {
+        const response = await fetch(qrBlob)
+        const blob = await response.blob()
+        const file = new File([blob], 'menu-qr.png', { type: 'image/png' })
+        await navigator.share({
+          title: 'Swad Anusar Digital Menu',
+          text: 'Scan this QR to view our digital menu and place an order!',
+          files: [file],
+        })
+      } catch (err) {
+        toast.error('Sharing failed or was cancelled.')
+      }
+    } else {
+      toast.error('Sharing not supported on this browser/device.')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
       <header className="mb-10 text-center max-w-2xl mx-auto">
@@ -94,16 +123,18 @@ export default function QRGenerator() {
 
             <div className="grid grid-cols-1 gap-4">
                 <button 
+                    onClick={handleDownload}
                     className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all flex items-center justify-center gap-2 text-lg"
                 >
                     <Download className="w-6 h-6" />
                     Download Branded QR
                 </button>
                 <button 
+                    onClick={handleShare}
                     className="w-full bg-white border-2 border-primary text-primary py-4 rounded-2xl font-bold hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2"
                 >
                     <Share2 className="w-6 h-6" />
-                    Share via WhatsApp
+                    Share via Native App
                 </button>
             </div>
 

@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // We can generate it using the lib helper which uses 'qrcode'
-    const qrDataUrl = await generateMenuQR(url.replace('/menu', '')) // generateMenuQR appends /menu
+    const qrDataUrl = await generateMenuQR(url)
     return NextResponse.json({ qrDataUrl })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to generate QR' }, { status: 500 })
