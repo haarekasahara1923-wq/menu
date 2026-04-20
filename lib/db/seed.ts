@@ -53,11 +53,22 @@ async function seed() {
 
     // Helper to insert or update dish image
     const upsertDish = async (dishData: any) => {
-        const [existing] = await db.select().from(dishes).where(eq(dishes.name, dishData.name))
+        // Try to find by name (case-insensitive for better matching)
+        const allDishes = await db.select().from(dishes);
+        const existing = allDishes.find(d => d.name.toLowerCase() === dishData.name.toLowerCase());
+
         if (existing) {
-            await db.update(dishes).set({ images: dishData.images, categoryId: insertedCat.id }).where(eq(dishes.id, existing.id))
+            console.log(`📡 Updating dish: ${dishData.name}`);
+            await db.update(dishes).set({ 
+                images: dishData.images, 
+                categoryId: insertedCat.id,
+                description: dishData.description,
+                isVeg: dishData.isVeg,
+                sizes: dishData.sizes || existing.sizes
+            }).where(eq(dishes.id, existing.id));
         } else {
-            await db.insert(dishes).values(dishData)
+            console.log(`✨ Creating dish: ${dishData.name}`);
+            await db.insert(dishes).values(dishData);
         }
     }
 

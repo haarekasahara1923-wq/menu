@@ -28,7 +28,8 @@ export default function MenuPage() {
   const activeCategoryData = categories.find(c => c.id === activeCategory)
 
   return (
-    <div className="min-h-screen pb-24 font-poppins">
+    <div className="min-h-screen pb-24 font-poppins bg-background">
+      <div className="mx-auto w-full">
       {/* Header */}
       <header className="bg-primary text-white p-6 rounded-b-[2rem] shadow-lg">
         <div className="max-w-7xl mx-auto w-full flex justify-between items-center">

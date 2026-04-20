@@ -8,7 +8,7 @@ export default function Home() {
       <div className="absolute top-[-10%] left-[-20%] w-[120%] h-[50%] bg-primary/40 blur-[100px] rounded-[100%] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-20%] w-[120%] h-[50%] bg-[#F4A261]/20 blur-[120px] rounded-[100%] pointer-events-none"></div>
 
-      <div className="z-10 flex flex-col items-center max-w-sm mx-auto w-full">
+      <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
         {/* Icon / Brand Mark */}
         <div className="w-24 h-24 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center mb-8 shadow-[0_0_40px_rgba(181,69,27,0.3)]">
           <UtensilsCrossed className="w-12 h-12 text-[#F4A261]" />
