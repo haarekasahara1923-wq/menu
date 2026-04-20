@@ -119,7 +119,13 @@ async function seed() {
     }
   }
 
-  await bustCache('menu:all')
+  console.log('🧹 Attempting to clear Redis cache: menu:all')
+  try {
+    await bustCache('menu:all')
+    console.log('✨ Cache busted successfully.')
+  } catch (err) {
+    console.error('❌ Failed to clear cache. You may need to manual clear Redis:', err)
+  }
   console.log('✅ Seeding complete!')
   process.exit(0)
 }
