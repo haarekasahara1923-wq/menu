@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, ShoppingBag, MapPin, Phone, ChevronRight } from 'lucide-react'
+import { ShoppingBag, MapPin, Phone, ChevronRight } from 'lucide-react'
 import { useCart } from '@/lib/store'
 import { DishCard } from '@/components/menu/DishCard'
 import { CategoryTabs } from '@/components/menu/CategoryTabs'
@@ -46,10 +46,10 @@ export default function MenuPage() {
       </header>
 
       <div className="flex flex-col lg:flex-row flex-1 max-w-[1920px] mx-auto w-full md:px-8">
-        {/* Categories - Side Sidebar on Desktop, Top Tabs on Mobile */}
+        {/* Categories Sidebar/TopTabs */}
         <aside className="lg:w-72 lg:sticky lg:top-32 lg:h-[calc(100vh-10rem)] py-6 z-40 bg-background lg:pr-8">
           <div className="px-4 lg:px-0">
-            <h2 className="hidden lg:block text-xl font-bold font-playfair mb-6 text-primary">Menu Categories</h2>
+            <h2 className="hidden lg:block text-xl font-bold font-playfair mb-6 text-primary border-b border-primary/10 pb-4">Menu Categories</h2>
             <div className="lg:flex lg:flex-col lg:gap-3">
                 <CategoryTabs 
                     categories={categories} 
@@ -64,12 +64,12 @@ export default function MenuPage() {
 
         {/* Main Content */}
         <main className="flex-1 px-4 lg:px-0 mt-6 md:mt-8">
-          {/* Hero / Banner */}
+          {/* Banner */}
           <div className="mb-10 lg:mb-12">
-            <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-3xl p-8 md:p-12 text-white overflow-hidden relative shadow-xl min-h-[200px] flex flex-col justify-center">
+            <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-3xl p-8 md:p-12 text-white overflow-hidden relative shadow-xl min-h-[220px] flex flex-col justify-center">
                 <div className="relative z-10">
                     <h2 className="text-3xl md:text-5xl font-bold font-playfair mb-4 drop-shadow-md tracking-tight">Authentic Flavors</h2>
-                    <p className="text-base md:text-lg opacity-90 max-w-[400px] font-medium leading-relaxed">Experience a taste that feels like home, right here at your table.</p>
+                    <p className="text-base md:text-lg opacity-90 max-w-[420px] font-medium leading-relaxed">Experience a taste that feels like home, prepared fresh and served with love.</p>
                 </div>
                 <div className="absolute right-[-40px] top-[-40px] bg-white/20 w-80 h-80 rounded-full blur-[100px]"></div>
                 <div className="absolute left-[-40px] bottom-[-40px] bg-white/10 w-60 h-60 rounded-full blur-[80px]"></div>
@@ -77,8 +77,8 @@ export default function MenuPage() {
           </div>
 
           <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl md:text-3xl font-bold font-playfair flex items-center gap-3">
-                  {activeCategoryData?.name || 'Loading Menu...'}
+              <h3 className="text-2xl md:text-3xl font-bold font-playfair flex items-center gap-3 capitalize">
+                  {activeCategoryData?.name || 'Loading Food...'}
                   {!loading && (
                     <span className="text-sm font-normal text-text-secondary bg-[#E8D5C4] px-4 py-1 rounded-full uppercase tracking-wider">
                         {activeCategoryData?.dishes?.length || 0} Items
@@ -106,7 +106,7 @@ export default function MenuPage() {
           <motion.div 
             initial={{ y: 100 }}
             animate={{ y: 0 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[400px] z-50 pointer-events-none"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[450px] z-50 pointer-events-none"
           >
             <button 
                 onClick={() => setIsCartOpen(true)}
@@ -132,11 +132,10 @@ export default function MenuPage() {
           </motion.div>
       )}
 
-      {/* Cart Panel */}
+      {/* Cart Panel Overlay */}
       <AnimatePresence>
         {isCartOpen && <CartPanel onClose={() => setIsCartOpen(false)} />}
       </AnimatePresence>
-      </div>
     </div>
   )
 }
