@@ -11,6 +11,38 @@ export default function MenuManager() {
   const [activeTab, setActiveTab] = useState<'categories' | 'dishes'>('dishes')
   const [loading, setLoading] = useState(true)
   const [showAddDish, setShowAddDish] = useState(false)
+  const [newDish, setNewDish] = useState({
+    name: '',
+    description: '',
+    categoryId: '',
+    price: '',
+    isVeg: true,
+    images: ['', '', '']
+  })
+  const [saving, setSaving] = useState(false)
+
+  const handleAddDish = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newDish.name || !newDish.categoryId || !newDish.price) {
+      toast.error('Please fill required fields')
+      return
+    }
+    setSaving(true)
+    const res = await fetch('/api/admin/dishes', {
+      method: 'POST',
+      body: JSON.stringify(newDish),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    setSaving(false)
+    if (res.ok) {
+      toast.success('Dish added successfully')
+      setShowAddDish(false)
+      setNewDish({ name: '', description: '', categoryId: '', price: '', isVeg: true, images: ['', '', ''] })
+      fetchData()
+    } else {
+      toast.error('Failed to add dish')
+    }
+  }
 
   useEffect(() => {
     fetchData()
@@ -124,16 +156,73 @@ export default function MenuManager() {
           </div>
       )}
       
-      {/* Add Dish Modal Placeholder */}
+      {/* Add Dish Modal */}
       {showAddDish && (
           <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-4 flex items-center justify-center overflow-y-auto">
-              <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-2xl rounded-[2.5rem] p-8 shadow-2xl">
+              <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-2xl rounded-[2.5rem] p-8 shadow-2xl my-8">
                   <div className="flex justify-between items-center mb-6">
                       <h2 className="text-2xl font-bold font-playfair">Add New Dish</h2>
-                      <button onClick={() => setShowAddDish(false)} className="p-2 bg-background rounded-full"><X /></button>
+                      <button onClick={() => setShowAddDish(false)} className="p-2 bg-background rounded-full hover:bg-red-50 hover:text-red-500 transition-all"><X /></button>
                   </div>
-                  <p className="text-text-secondary italic mb-6">Form implementation follows standard patterns from Phase 5 specs.</p>
-                  <button onClick={() => setShowAddDish(false)} className="w-full bg-primary text-white py-4 rounded-2xl font-bold">Close</button>
+                  
+                  <form onSubmit={handleAddDish} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-text-secondary uppercase mb-1 block">Dish Name *</label>
+                        <input required type="text" value={newDish.name} onChange={e => setNewDish({...newDish, name: e.target.value})} className="w-full bg-background border border-border p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="e.g. Masala Dosa" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-bold text-text-secondary uppercase mb-1 block">Category *</label>
+                        <select required value={newDish.categoryId} onChange={e => setNewDish({...newDish, categoryId: e.target.value})} className="w-full bg-background border border-border p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20">
+                          <option value="">Select Category</option>
+                          {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-text-secondary uppercase mb-1 block">Description</label>
+                      <textarea value={newDish.description} onChange={e => setNewDish({...newDish, description: e.target.value})} className="w-full bg-background border border-border p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[80px]" placeholder="Brief description of the dish..." />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-bold text-text-secondary uppercase mb-1 block">Price (₹) *</label>
+                        <input required type="number" min="0" value={newDish.price} onChange={e => setNewDish({...newDish, price: e.target.value})} className="w-full bg-background border border-border p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="150" />
+                      </div>
+                      <div className="flex items-center gap-3 pt-6">
+                        <input type="checkbox" id="isVeg" checked={newDish.isVeg} onChange={e => setNewDish({...newDish, isVeg: e.target.checked})} className="w-5 h-5 accent-green-600" />
+                        <label htmlFor="isVeg" className="font-bold text-green-700 flex items-center gap-2"><span className="w-3 h-3 bg-green-500 rounded-full border-2 border-green-700 block"></span> Vegetarian</label>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-border mt-4">
+                      <label className="text-xs font-bold text-text-secondary uppercase mb-2 block flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> Images (Max 3)
+                      </label>
+                      <p className="text-xs text-text-secondary mb-3">Paste direct image URLs (e.g. Unsplash, Cloudinary)</p>
+                      <div className="space-y-3">
+                        {[0, 1, 2].map((index) => (
+                          <input 
+                            key={index} 
+                            type="url" 
+                            value={newDish.images[index]} 
+                            onChange={e => {
+                              const newImages = [...newDish.images];
+                              newImages[index] = e.target.value;
+                              setNewDish({...newDish, images: newImages});
+                            }} 
+                            className="w-full bg-background border border-border p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20" 
+                            placeholder={`Image URL ${index + 1}${index === 0 ? ' (Primary)' : ' (Optional)'}`} 
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <button disabled={saving} type="submit" className="w-full bg-primary hover:bg-primary-light text-white py-4 rounded-2xl font-bold shadow-lg transition-all mt-6 disabled:opacity-50">
+                      {saving ? 'Saving...' : 'Save Dish'}
+                    </button>
+                  </form>
               </motion.div>
           </div>
       )}

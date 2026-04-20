@@ -6,6 +6,16 @@ import { Plus, Minus, Info } from 'lucide-react'
 import { useCart } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
+function parseImages(images: any): string[] {
+  if (!images) return []
+  if (Array.isArray(images)) return images.filter(Boolean)
+  try {
+    const parsed = JSON.parse(images)
+    if (Array.isArray(parsed)) return parsed.filter(Boolean)
+  } catch (e) {}
+  return typeof images === 'string' && images ? [images] : []
+}
+
 interface DishCardProps {
   dish: any
 }
@@ -25,14 +35,16 @@ export function DishCard({ dish }: DishCardProps) {
       sizeLabel: selectedSize.label,
       price: Number(selectedSize.price),
       quantity: 1,
-      image: dish.images?.[0]
+      image: parseImages(dish.images)[0]
     })
   }
+
+  const validImages = parseImages(dish.images)
 
   return (
     <div className="bg-white rounded-[2rem] p-4 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col group">
       {/* Veg/Non-Veg Tag */}
-      <div className="absolute top-6 left-6 z-10 flex items-center gap-1.5 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-[10px] font-bold">
+      <div className="absolute top-6 left-6 z-20 flex items-center gap-1.5 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-[10px] font-bold pointer-events-none">
         <div className={cn(
           "w-2 h-2 rounded-full",
           dish.isVeg ? "bg-green-500" : "bg-red-500"
@@ -40,18 +52,34 @@ export function DishCard({ dish }: DishCardProps) {
         {dish.isVeg ? 'VEG' : 'NON-VEG'}
       </div>
 
-      {/* Dish Image */}
-      <div className="relative w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden mb-4">
-        {dish.images?.[0] ? (
-          <Image 
-            src={dish.images[0]} 
-            alt={dish.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+      {/* Dish Images - Snap Carousel */}
+      <div className="relative w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden mb-4 group/carousel">
+        {validImages.length > 0 ? (
+          <div className="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar smooth-scroll">
+            {validImages.map((img, idx) => (
+              <div key={idx} className="w-full h-full flex-shrink-0 snap-center relative">
+                <Image 
+                  src={img} 
+                  alt={`${dish.name} - ${idx + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  className="object-cover transition-transform duration-500"
+                />
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="w-full h-full bg-accent/10 flex items-center justify-center text-accent">
-            No Image
+            <span className="opacity-50 font-medium">No Image</span>
+          </div>
+        )}
+        
+        {/* Carousel Indicators */}
+        {validImages.length > 1 && (
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10 pointer-events-none">
+            {validImages.map((_, idx) => (
+              <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white/60 shadow-sm border border-black/10"></div>
+            ))}
           </div>
         )}
       </div>
