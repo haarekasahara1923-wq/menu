@@ -3,6 +3,7 @@ import { db } from './index'
 import { users, categories, dishes, restaurantInfo } from './schema'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
+import { bustCache } from '../cache'
 
 async function seed() {
   console.log('🌱 Seeding database...')
@@ -107,6 +108,7 @@ async function seed() {
     }
   }
 
+  await bustCache('menu:all')
   console.log('✅ Seeding complete!')
   process.exit(0)
 }

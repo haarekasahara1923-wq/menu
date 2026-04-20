@@ -31,7 +31,7 @@ export default function MenuPage() {
     <div className="min-h-screen pb-24 font-poppins">
       {/* Header */}
       <header className="bg-primary text-white p-6 rounded-b-[2rem] shadow-lg">
-        <div className="w-full flex justify-between items-center">
+        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
           <div>
             <h1 className="font-playfair text-3xl font-bold italic">Swad Anusar</h1>
             <div className="flex items-center text-xs opacity-80 mt-1">
@@ -46,8 +46,8 @@ export default function MenuPage() {
       </header>
 
       {/* Hero / Banner */}
-      <div className="w-full px-4 mt-6">
-        <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-2xl p-6 text-white overflow-hidden relative shadow-lg">
+      <div className="max-w-7xl mx-auto w-full px-4 mt-6">
+        <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-2xl p-6 md:p-10 text-white overflow-hidden relative shadow-lg">
             <div className="relative z-10">
                 <h2 className="text-2xl font-bold font-playfair mb-1 drop-shadow-sm">Authentic Flavors</h2>
                 <p className="text-sm opacity-95 max-w-[200px] font-medium">Taste that feels like home, right at your table.</p>
@@ -62,16 +62,18 @@ export default function MenuPage() {
 
       {/* Categories */}
       <div className="sticky top-0 z-40 bg-background pt-4 mt-2">
-        <CategoryTabs 
-          categories={categories} 
-          activeId={activeCategory} 
-          onSelect={setActiveCategory} 
-          loading={loading}
-        />
+        <div className="max-w-7xl mx-auto w-full">
+            <CategoryTabs 
+            categories={categories} 
+            activeId={activeCategory} 
+            onSelect={setActiveCategory} 
+            loading={loading}
+            />
+        </div>
       </div>
 
       {/* Dishes */}
-      <main className="w-full px-4 mt-6 flex-1">
+      <main className="max-w-7xl mx-auto w-full px-4 mt-6 flex-1">
         <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold font-playfair flex items-center">
                 {activeCategoryData?.name || 'All Dishes'}
@@ -81,7 +83,7 @@ export default function MenuPage() {
             </h3>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-8">
             {loading ? (
                 Array(4).fill(0).map((_, i) => (
                     <div key={i} className="bg-white rounded-2xl h-64 animate-pulse"></div>
