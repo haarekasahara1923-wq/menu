@@ -65,7 +65,8 @@ async function seed() {
             name: 'Poha Jalebi', 
             description: 'Indori special beaten rice with sweet jalebi', 
             isVeg: true, 
-            sizes: [{ label: 'Standard', price: 60 }] 
+            sizes: [{ label: 'Standard', price: 60 }],
+            images: ['https://images.unsplash.com/photo-1599307767316-776533da941c?q=80&w=800&auto=format&fit=crop']
         },
       ]).onConflictDoNothing()
     } else if (catData.name.includes('Main Course')) {
@@ -75,14 +76,16 @@ async function seed() {
             name: 'Paneer Butter Masala', 
             description: 'Creamy tomato based paneer curry', 
             isVeg: true, 
-            sizes: [{ label: 'Half', price: 180 }, { label: 'Full', price: 320 }] 
+            sizes: [{ label: 'Half', price: 180 }, { label: 'Full', price: 320 }],
+            images: ['https://images.unsplash.com/photo-1631452180519-c014fe946bc7?q=80&w=800&auto=format&fit=crop']
         },
         { 
             categoryId: insertedCat.id, 
             name: 'Dal Makhani', 
             description: 'Slow cooked black lentils with butter', 
             isVeg: true, 
-            sizes: [{ label: 'Bowl', price: 150 }] 
+            sizes: [{ label: 'Bowl', price: 150 }],
+            images: ['https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=800&auto=format&fit=crop']
         },
       ]).onConflictDoNothing()
     } else if (catData.name.includes('Starters')) {
@@ -92,7 +95,8 @@ async function seed() {
               name: 'Crispy Corn', 
               description: 'Deep fried corn tossed with spices', 
               isVeg: true, 
-              sizes: [{ label: 'Plate', price: 140 }] 
+              sizes: [{ label: 'Plate', price: 140 }],
+              images: ['https://images.unsplash.com/photo-1517093157656-b99917c6471c?q=80&w=800&auto=format&fit=crop']
           },
         ]).onConflictDoNothing()
     }
