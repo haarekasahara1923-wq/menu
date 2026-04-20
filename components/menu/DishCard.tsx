@@ -58,13 +58,14 @@ export function DishCard({ dish }: DishCardProps) {
           <div className="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar smooth-scroll">
             {validImages.map((img, idx) => (
               <div key={idx} className="w-full h-full flex-shrink-0 snap-center relative">
-                <Image 
-                  src={img} 
-                  alt={`${dish.name} - ${idx + 1}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 300px"
-                  className="object-cover transition-transform duration-500"
-                />
+                  <Image 
+                    src={img} 
+                    alt={`${dish.name} - ${idx + 1}`}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    className="object-cover transition-transform duration-500"
+                  />
               </div>
             ))}
           </div>

@@ -197,24 +197,70 @@ export default function MenuManager() {
                     </div>
 
                     <div className="pt-4 border-t border-border mt-4">
-                      <label className="text-xs font-bold text-text-secondary uppercase mb-2 block flex items-center gap-2">
-                        <ImageIcon className="w-4 h-4" /> Images (Max 3)
+                      <label className="text-xs font-bold text-text-secondary uppercase mb-2 flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> Images (Up to 3)
                       </label>
-                      <p className="text-xs text-text-secondary mb-3">Paste direct image URLs (e.g. Unsplash, Cloudinary)</p>
-                      <div className="space-y-3">
+                      <p className="text-xs text-text-secondary mb-3">Upload high-quality images from your device gallery.</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {[0, 1, 2].map((index) => (
-                          <input 
-                            key={index} 
-                            type="url" 
-                            value={newDish.images[index]} 
-                            onChange={e => {
-                              const newImages = [...newDish.images];
-                              newImages[index] = e.target.value;
-                              setNewDish({...newDish, images: newImages});
-                            }} 
-                            className="w-full bg-background border border-border p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20" 
-                            placeholder={`Image URL ${index + 1}${index === 0 ? ' (Primary)' : ' (Optional)'}`} 
-                          />
+                          <div key={index} className="flex flex-col gap-2 relative">
+                             {newDish.images[index] ? (
+                               <div className="relative h-24 w-full rounded-xl border border-border overflow-hidden bg-accent/10 shadow-inner group">
+                                  <img src={newDish.images[index]} alt="Dish preview" className="w-full h-full object-cover" />
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                      <button type="button" onClick={() => {
+                                          const newImages = [...newDish.images];
+                                          newImages[index] = '';
+                                          setNewDish({...newDish, images: newImages});
+                                      }} className="bg-red-500 text-white rounded-full p-2 hover:scale-110 transition-transform shadow-md">
+                                          <Trash2 className="w-4 h-4" />
+                                      </button>
+                                  </div>
+                               </div>
+                             ) : (
+                                <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-xl hover:bg-primary/5 hover:border-primary/50 cursor-pointer transition-all">
+                                  <span className="text-xs font-bold text-text-secondary flex flex-col items-center gap-1 opacity-70">
+                                     <Plus className="w-5 h-5 text-primary" /> Image {index + 1}
+                                  </span>
+                                  <input 
+                                    type="file" 
+                                    accept="image/*"
+                                    className="hidden" 
+                                    onChange={async (e) => {
+                                      const file = e.target.files?.[0];
+                                      if (!file) return;
+                                      
+                                      // Validate size (optional max 10MB test)
+                                      if(file.size > 10 * 1024 * 1024) {
+                                          toast.error('File too large. Max 10MB allowed.');
+                                          return;
+                                      }
+
+                                      setSaving(true);
+                                      toast.loading('Uploading image...', { id: `upload-${index}` });
+                                      try {
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+                                        const data = await res.json();
+                                        if (data.url) {
+                                          const newImages = [...newDish.images];
+                                          newImages[index] = data.url;
+                                          setNewDish({...newDish, images: newImages});
+                                          toast.success('Image uploaded!', { id: `upload-${index}` });
+                                        } else {
+                                          toast.error(data.error || 'Upload failed', { id: `upload-${index}` });
+                                        }
+                                      } catch(err) {
+                                        toast.error('Network error during upload', { id: `upload-${index}` });
+                                      } finally {
+                                        setSaving(false);
+                                      }
+                                    }}
+                                  />
+                                </label>
+                             )}
+                          </div>
                         ))}
                       </div>
                     </div>
