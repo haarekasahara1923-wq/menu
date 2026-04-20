@@ -4,9 +4,9 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
-const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-poppins" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter-next" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair-next" });
+const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-poppins-next" });
 
 export const metadata: Metadata = {
   title: "Swad Anusar | Branded Digital Menu",
@@ -20,8 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans bg-[#FFF8F0]`}>
-        {children}
+      <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans bg-gray-100 flex justify-center min-h-screen`}>
+        <div className="w-full max-w-md bg-[var(--background)] min-h-screen shadow-2xl relative overflow-hidden flex flex-col">
+          {children}
+        </div>
         <Toaster position="top-center" richColors />
       </body>
     </html>

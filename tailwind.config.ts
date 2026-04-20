@@ -26,8 +26,8 @@ const config: Config = {
         border: "var(--border)",
       },
       fontFamily: {
-        playfair: ["var(--font-playfair)", "serif"],
-        poppins: ["var(--font-poppins)", "sans-serif"],
+        playfair: ["var(--font-playfair-next)", "serif"],
+        poppins: ["var(--font-poppins-next)", "sans-serif"],
       },
     },
   },

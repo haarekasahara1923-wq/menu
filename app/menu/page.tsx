@@ -31,7 +31,7 @@ export default function MenuPage() {
     <div className="min-h-screen pb-24 font-poppins">
       {/* Header */}
       <header className="bg-primary text-white p-6 rounded-b-[2rem] shadow-lg">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
+        <div className="w-full flex justify-between items-center">
           <div>
             <h1 className="font-playfair text-3xl font-bold italic">Swad Anusar</h1>
             <div className="flex items-center text-xs opacity-80 mt-1">
@@ -46,16 +46,17 @@ export default function MenuPage() {
       </header>
 
       {/* Hero / Banner */}
-      <div className="max-w-4xl mx-auto px-4 mt-6">
-        <div className="bg-[#F4A261] rounded-2xl p-6 text-white overflow-hidden relative shadow-md">
+      <div className="w-full px-4 mt-6">
+        <div className="bg-gradient-to-r from-[#F4A261] to-[#E76F51] rounded-2xl p-6 text-white overflow-hidden relative shadow-lg">
             <div className="relative z-10">
-                <h2 className="text-2xl font-bold font-playfair mb-1">Authentic Flavors</h2>
-                <p className="text-sm opacity-90 max-w-[200px]">Taste that feels like home, right at your table.</p>
-                <button className="bg-white text-primary px-4 py-2 rounded-full mt-4 text-sm font-bold shadow-lg">
+                <h2 className="text-2xl font-bold font-playfair mb-1 drop-shadow-sm">Authentic Flavors</h2>
+                <p className="text-sm opacity-95 max-w-[200px] font-medium">Taste that feels like home, right at your table.</p>
+                <button className="bg-white text-primary px-5 py-2.5 rounded-full mt-4 text-sm font-bold shadow-xl transition hover:scale-105 active:scale-95">
                     Check Offers
                 </button>
             </div>
-            <div className="absolute right-[-20px] top-[-20px] bg-white/20 w-40 h-40 rounded-full blur-3xl"></div>
+            <div className="absolute right-[-20px] top-[-20px] bg-white/30 w-48 h-48 rounded-full blur-3xl"></div>
+            <div className="absolute left-[-20px] bottom-[-20px] bg-white/20 w-32 h-32 rounded-full blur-2xl"></div>
         </div>
       </div>
 
@@ -70,7 +71,7 @@ export default function MenuPage() {
       </div>
 
       {/* Dishes */}
-      <main className="max-w-4xl mx-auto px-4 mt-6">
+      <main className="w-full px-4 mt-6 flex-1">
         <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-bold font-playfair flex items-center">
                 {activeCategoryData?.name || 'All Dishes'}
@@ -80,7 +81,7 @@ export default function MenuPage() {
             </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-5 pb-8">
             {loading ? (
                 Array(4).fill(0).map((_, i) => (
                     <div key={i} className="bg-white rounded-2xl h-64 animate-pulse"></div>
@@ -98,11 +99,11 @@ export default function MenuPage() {
           <motion.div 
             initial={{ y: 100 }}
             animate={{ y: 0 }}
-            className="fixed bottom-6 left-0 right-0 px-4 z-50 pointer-events-none"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[400px] z-50 pointer-events-none"
           >
             <button 
                 onClick={() => setIsCartOpen(true)}
-                className="w-full max-w-lg mx-auto bg-primary text-white h-16 rounded-2xl flex items-center justify-between px-6 shadow-2xl pointer-events-auto"
+                className="w-full bg-primary text-white h-16 rounded-2xl flex items-center justify-between px-6 shadow-[0_10px_40px_rgba(181,69,27,0.4)] pointer-events-auto transition hover:scale-[1.02] active:scale-[0.98]"
             >
                 <div className="flex items-center gap-4">
                     <div className="relative">

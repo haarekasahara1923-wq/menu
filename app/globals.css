@@ -31,8 +31,8 @@
   --color-error: var(--error);
   --color-border: var(--border);
 
-  --font-playfair: var(--font-playfair), serif;
-  --font-poppins: var(--font-poppins), sans-serif;
+  --font-playfair: var(--font-playfair-next), serif;
+  --font-poppins: var(--font-poppins-next), sans-serif;
 }
 
 @layer base {
