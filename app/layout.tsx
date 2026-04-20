@@ -20,10 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans bg-gray-100 flex justify-center min-h-screen`}>
-        <div className="w-full max-w-md bg-[var(--background)] min-h-screen shadow-2xl relative overflow-hidden flex flex-col">
+      <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans min-h-screen bg-background`}>
           {children}
-        </div>
         <Toaster position="top-center" richColors />
       </body>
     </html>
