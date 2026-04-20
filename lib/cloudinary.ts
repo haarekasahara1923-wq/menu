@@ -35,6 +35,8 @@ export async function uploadDishImage(file: Buffer, dishName: string) {
     console.error('❌ Cloudinary Config Failed: api_key is still missing after explicit set.');
     throw new Error('Cloudinary configuration failed: api_key missing');
   }
+
+  return new Promise<{ url: string; publicId: string }>((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: 'swad-anusar/dishes',
@@ -52,7 +54,7 @@ export async function uploadDishImage(file: Buffer, dishName: string) {
       }
     );
     uploadStream.end(file);
-  })
+  });
 }
 
 export async function deleteDishImage(publicId: string) {
