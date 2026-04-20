@@ -1,4 +1,4 @@
-'use client'
+'use client' // Version: 1.0.1 - Updated layout and data cleanup
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
