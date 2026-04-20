@@ -42,7 +42,12 @@ async function seed() {
       name: catData.name,
       displayOrder: catData.order,
       isActive: true,
-    }).returning({ id: categories.id })
+    })
+    .onConflictDoUpdate({
+        target: categories.name,
+        set: { displayOrder: catData.order }
+    })
+    .returning({ id: categories.id })
 
     // Add dishes for this category
     if (catData.name.includes('Breakfast')) {
@@ -62,7 +67,7 @@ async function seed() {
             isVeg: true, 
             sizes: [{ label: 'Standard', price: 60 }] 
         },
-      ])
+      ]).onConflictDoNothing()
     } else if (catData.name.includes('Main Course')) {
       await db.insert(dishes).values([
         { 
@@ -79,7 +84,7 @@ async function seed() {
             isVeg: true, 
             sizes: [{ label: 'Bowl', price: 150 }] 
         },
-      ])
+      ]).onConflictDoNothing()
     } else if (catData.name.includes('Starters')) {
         await db.insert(dishes).values([
           { 
@@ -89,7 +94,7 @@ async function seed() {
               isVeg: true, 
               sizes: [{ label: 'Plate', price: 140 }] 
           },
-        ])
+        ]).onConflictDoNothing()
     }
   }
 
