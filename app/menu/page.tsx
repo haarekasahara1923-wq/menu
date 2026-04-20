@@ -132,6 +132,7 @@ export default function MenuPage() {
       <AnimatePresence>
         {isCartOpen && <CartPanel onClose={() => setIsCartOpen(false)} />}
       </AnimatePresence>
+      </div>
     </div>
   )
 }
