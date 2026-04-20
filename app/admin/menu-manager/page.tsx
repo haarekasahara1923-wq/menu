@@ -250,10 +250,10 @@ export default function MenuManager() {
                                           setNewDish({...newDish, images: newImages});
                                           toast.success('Image uploaded!', { id: `upload-${index}` });
                                         } else {
-                                          toast.error(data.error || 'Upload failed', { id: `upload-${index}` });
+                                          toast.error(data.details || data.error || 'Upload failed', { id: `upload-${index}` });
                                         }
-                                      } catch(err) {
-                                        toast.error('Network error during upload', { id: `upload-${index}` });
+                                      } catch(err: any) {
+                                        toast.error(err.message || 'Network error during upload', { id: `upload-${index}` });
                                       } finally {
                                         setSaving(false);
                                       }
