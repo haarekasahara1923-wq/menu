@@ -4,17 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Plus, Minus, Info } from 'lucide-react'
 import { useCart } from '@/lib/store'
-import { cn } from '@/lib/utils'
-
-function parseImages(images: any): string[] {
-  if (!images) return []
-  if (Array.isArray(images)) return images.filter(Boolean)
-  try {
-    const parsed = JSON.parse(images)
-    if (Array.isArray(parsed)) return parsed.filter(Boolean)
-  } catch (e) {}
-  return typeof images === 'string' && images ? [images] : []
-}
+import { cn, parseImages } from '@/lib/utils'
 
 interface DishCardProps {
   dish: any

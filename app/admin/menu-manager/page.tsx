@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Plus, Edit2, Trash2, ChevronRight, Image as ImageIcon, Check, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
+import { parseImages } from '@/lib/utils'
 
 export default function MenuManager() {
   const [categories, setCategories] = useState<any[]>([])
@@ -111,8 +112,8 @@ export default function MenuManager() {
                             className="bg-white p-5 rounded-[2rem] border border-border group hover:border-primary transition-all shadow-sm"
                         >
                             <div className="relative aspect-video rounded-2xl overflow-hidden bg-accent/10 mb-4 border border-border">
-                                {dish.images?.[0] ? (
-                                    <img src={dish.images[0]} alt={dish.name} className="w-full h-full object-cover" />
+                                {parseImages(dish.images)[0] ? (
+                                    <img src={parseImages(dish.images)[0]} alt={dish.name} className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-accent">
                                         <ImageIcon className="w-8 h-8" />

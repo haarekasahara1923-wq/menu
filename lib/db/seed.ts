@@ -52,7 +52,7 @@ async function seed() {
             description: 'Crispy rice pancake with potato filling', 
             isVeg: true, 
             sizes: [{ label: 'Standard', price: 120 }],
-            images: ['https://res.cloudinary.com/dpgabobnc/image/upload/v1713532800/sample_dosa.jpg']
+            images: ['https://images.unsplash.com/photo-1668236543090-82eba5ee5976?q=80&w=800&auto=format&fit=crop']
         },
         { 
             categoryId: insertedCat.id, 

@@ -21,11 +21,18 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer)
 
     // Upload to Cloudinary
-    const result = await uploadDishImage(buffer, file.name || 'dish')
-
-    return NextResponse.json({ url: result.url, publicId: result.publicId })
-  } catch (error) {
-    console.error('Upload Error:', error)
-    return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 })
+    try {
+      const result = await uploadDishImage(buffer, file.name || 'dish')
+      return NextResponse.json({ url: result.url, publicId: result.publicId })
+    } catch (uploadError: any) {
+      console.error('Cloudinary Upload Error Details:', uploadError)
+      return NextResponse.json({ 
+        error: 'Cloudinary upload failed', 
+        details: uploadError.message || uploadError 
+      }, { status: 500 })
+    }
+  } catch (error: any) {
+    console.error('API Route Error:', error)
+    return NextResponse.json({ error: 'Failed to process upload', details: error.message }, { status: 500 })
   }
 }
