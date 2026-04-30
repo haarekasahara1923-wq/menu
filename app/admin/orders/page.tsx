@@ -5,21 +5,26 @@ import { motion } from 'framer-motion'
 import { ShoppingBag, ChevronRight, Clock, MapPin, User, Search, Receipt, X, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
+import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
+import { Logo } from '@/components/Logo'
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [restaurantInfo, setRestaurantInfo] = useState<any>(null)
 
   const [selectedOrder, setSelectedOrder] = useState<any>(null)
 
   useEffect(() => {
-    fetch('/api/reception/orders')
-      .then(res => res.json())
-      .then(data => {
-        setOrders(data)
+    Promise.all([
+        fetch('/api/reception/orders').then(res => res.json()),
+        fetch('/api/admin/settings').then(res => res.json())
+    ]).then(([ordersData, settingsData]) => {
+        setOrders(ordersData)
+        setRestaurantInfo(settingsData)
         setLoading(false)
-      })
+    })
   }, [])
 
   // Timing Logic: Check for delays every 30 seconds
@@ -164,12 +169,32 @@ export default function AdminOrders() {
           <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-4 flex items-center justify-center">
               <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                  <div className="flex justify-between items-start mb-8">
-                      <div>
-                          <h2 className="text-2xl font-bold font-playfair">Receipt</h2>
-                          <p className="text-xs text-text-secondary">Order #{selectedOrder.orderNumber}</p>
+                  
+                  {/* Header with Logo & Resto Info */}
+                  <div className="flex flex-col items-center text-center mb-8">
+                      <div className="flex justify-between w-full mb-4">
+                        <div className="invisible"><X /></div> {/* Spacer */}
+                        <Logo width={60} height={60} />
+                        <button onClick={() => setSelectedOrder(null)} className="p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"><X /></button>
                       </div>
-                      <button onClick={() => setSelectedOrder(null)} className="p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"><X /></button>
+                      <h2 className="text-2xl font-bold font-playfair">{restaurantInfo?.name || 'Swad Anusar'}</h2>
+                      <p className="text-[10px] text-text-secondary uppercase tracking-widest">{restaurantInfo?.address || 'Govindpuri, Gwalior (MP)'}</p>
+                      <p className="text-[10px] text-primary font-bold mt-1">Ph: {restaurantInfo?.contactPhone}</p>
+                  </div>
+
+                  <div className="bg-[#FFF8F0] p-4 rounded-2xl border border-border/50 mb-6 space-y-2">
+                      <div className="flex justify-between text-xs">
+                          <span className="text-text-secondary">Customer:</span>
+                          <span className="font-bold">{selectedOrder.customerName}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                          <span className="text-text-secondary">WhatsApp:</span>
+                          <span className="font-bold text-primary">{selectedOrder.customerPhone}</span>
+                      </div>
+                      <div className="flex justify-between text-xs pt-2 border-t border-border/30">
+                          <span className="text-text-secondary">Order ID:</span>
+                          <span className="font-bold">#{selectedOrder.orderNumber}</span>
+                      </div>
                   </div>
                   
                   <div className="border-y border-dashed border-border py-6 space-y-4 mb-6">
@@ -192,24 +217,25 @@ export default function AdminOrders() {
                       </div>
                   </div>
 
-                  <button 
-                    onClick={() => window.print()}
-                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-primary-light transition-all flex items-center justify-center gap-2"
-                  >
-                      <Receipt className="w-5 h-5" />
-                      Print Receipt
-                  </button>
-
-                  {/* WhatsApp Notification Button */}
+                  {/* WhatsApp Share Button */}
                   <button 
                     onClick={() => {
-                        const message = encodeURIComponent(`Namaste ${selectedOrder.customerName}! Your delicious order #${selectedOrder.orderNumber} from Swad Anusar is ready to be delivered. Enjoy your meal! 🥘`)
+                        const items = selectedOrder.items.map((i: any) => `${i.quantity}x ${i.dishName} - ₹${i.totalPrice}`).join('%0A')
+                        const message = encodeURIComponent(`*${restaurantInfo?.name || 'Swad Anusar'} Receipt*%0A--------------------------%0A*Order:* #${selectedOrder.orderNumber}%0A*Customer:* ${selectedOrder.customerName}%0A--------------------------%0A${items}%0A--------------------------%0A*TOTAL: ₹${selectedOrder.total}*%0A%0A_Thank you for ordering!_`)
                         window.open(`https://wa.me/${selectedOrder.customerPhone}?text=${message}`, '_blank')
                     }}
-                    className="w-full mt-3 bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-[#128C7E] transition-all flex items-center justify-center gap-3"
                   >
-                      <MessageSquare className="w-5 h-5" />
-                      Notify via WhatsApp
+                      <WhatsAppIcon className="w-6 h-6 fill-white" />
+                      Share Receipt via WhatsApp
+                  </button>
+
+                  <button 
+                    onClick={() => window.print()}
+                    className="w-full mt-3 bg-white border border-border text-text-secondary py-3 rounded-xl text-xs font-bold hover:bg-border/10 transition-all flex items-center justify-center gap-2"
+                  >
+                      <Receipt className="w-4 h-4" />
+                      Print Copy
                   </button>
               </motion.div>
           </div>
