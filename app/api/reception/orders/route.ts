@@ -12,6 +12,9 @@ export async function GET() {
 
   const result = await db.query.orders.findMany({
     where: notInArray(orders.status, ['cancelled']),
+    with: {
+        items: true
+    },
     orderBy: [desc(orders.createdAt)],
   })
 

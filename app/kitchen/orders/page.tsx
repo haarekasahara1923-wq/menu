@@ -33,6 +33,7 @@ export default function KitchenOrders() {
   }, [])
 
   const updateStatus = async (orderId: string, status: string) => {
+    toast.dismiss(`kitchen-delay-${orderId}`)
     await fetch(`/api/orders/${orderId}`, {
         method: 'PATCH',
         body: JSON.stringify({ status })

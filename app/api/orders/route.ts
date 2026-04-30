@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { orders, orderItems } from '@/lib/db/schema'
 import { publishOrderEvent, cacheRecentEvent, CHANNELS } from '@/lib/pubsub'
+import { eq, and, ne } from 'drizzle-orm'
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,23 +12,53 @@ export async function POST(req: NextRequest) {
         address, name, phone, notes 
     } = data
 
-    // 1. Generate Order Number (Simple)
-    const orderNumber = `OR-${Math.floor(1000 + Math.random() * 9000)}`
+    let orderId: string
+    let orderNumber: string
+    let isReorder = false
 
-    // 2. Save Order to Database
-    const newOrder = await db.insert(orders).values({
-        orderNumber,
-        deliveryType,
-        tableNumber: tableNumber || null,
-        deliveryAddress: address || null,
-        customerName: name,
-        customerPhone: phone,
-        total: total.toString(),
-        notes: notes || null,
-        status: 'pending',
-    }).returning()
+    // 1. Check for existing active order for this table (Dine-in only)
+    if (deliveryType === 'dine-in' && tableNumber) {
+        const existingOrder = await db.query.orders.findFirst({
+            where: and(
+                eq(orders.tableNumber, tableNumber),
+                ne(orders.status, 'delivered'),
+                ne(orders.status, 'cancelled')
+            )
+        })
 
-    const orderId = newOrder[0].id
+        if (existingOrder) {
+            orderId = existingOrder.id
+            orderNumber = existingOrder.orderNumber
+            isReorder = true
+            
+            // Update total for existing order
+            const newTotal = Number(existingOrder.total) + Number(total)
+            await db.update(orders)
+                .set({ 
+                    total: newTotal.toString(),
+                    updatedAt: new Date(),
+                    status: 'pending' // Revert to pending to notify kitchen of new items
+                })
+                .where(eq(orders.id, orderId))
+        }
+    }
+
+    // 2. If no existing order, create new one
+    if (!orderId!) {
+        orderNumber = `OR-${Math.floor(1000 + Math.random() * 9000)}`
+        const newOrder = await db.insert(orders).values({
+            orderNumber,
+            deliveryType,
+            tableNumber: tableNumber || null,
+            deliveryAddress: address || null,
+            customerName: name,
+            customerPhone: phone,
+            total: total.toString(),
+            notes: notes || null,
+            status: 'pending',
+        }).returning()
+        orderId = newOrder[0].id
+    }
 
     // 3. Save Order Items
     const itemsToInsert = items.map((item: any) => ({
@@ -49,13 +80,15 @@ export async function POST(req: NextRequest) {
         deliveryType,
         tableNumber,
         customerName: name,
-        total,
+        total: total, // For reorder, we just send the new items total to notify
         status: 'pending',
+        isUpdate: isReorder,
         createdAt: new Date().toISOString()
     }
     
-    await publishOrderEvent(CHANNELS.NEW_ORDER, payload)
-    await cacheRecentEvent(CHANNELS.NEW_ORDER, payload)
+    const channel = isReorder ? CHANNELS.ORDER_UPDATED : CHANNELS.NEW_ORDER
+    await publishOrderEvent(channel, payload)
+    await cacheRecentEvent(channel, payload)
 
     return NextResponse.json({ success: true, orderNumber })
   } catch (error) {

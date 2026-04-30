@@ -40,6 +40,10 @@ export default function ReceptionOrders() {
   ]
 
   const updateStatus = async (orderId: string, status: string) => {
+    // Clear any active delay notifications for this order
+    toast.dismiss(`delay-prep-${orderId}`)
+    toast.dismiss(`delay-ready-${orderId}`)
+
     await fetch(`/api/orders/${orderId}`, {
         method: 'PATCH',
         body: JSON.stringify({ status })
