@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Plus, Edit2, Trash2, ChevronRight, Image as ImageIcon, Check, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 import { toast } from 'sonner'
 import { parseImages } from '@/lib/utils'
 
