@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     } = data
 
     let orderId: string | undefined
-    let orderNumber: string | undefined
+    let orderNumber: string | null | undefined
     let isReorder = false
 
     // 1. Check for existing active order for this table (Dine-in only)
