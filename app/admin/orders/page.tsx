@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ShoppingBag, ChevronRight, Clock, MapPin, User, Search, Receipt, X } from 'lucide-react'
+import { ShoppingBag, ChevronRight, Clock, MapPin, User, Search, Receipt, X, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 
@@ -198,6 +198,18 @@ export default function AdminOrders() {
                   >
                       <Receipt className="w-5 h-5" />
                       Print Receipt
+                  </button>
+
+                  {/* WhatsApp Notification Button */}
+                  <button 
+                    onClick={() => {
+                        const message = encodeURIComponent(`Namaste ${selectedOrder.customerName}! Your delicious order #${selectedOrder.orderNumber} from Swad Anusar is ready to be delivered. Enjoy your meal! 🥘`)
+                        window.open(`https://wa.me/${selectedOrder.customerPhone}?text=${message}`, '_blank')
+                    }}
+                    className="w-full mt-3 bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2"
+                  >
+                      <MessageSquare className="w-5 h-5" />
+                      Notify via WhatsApp
                   </button>
               </motion.div>
           </div>

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { X, ShoppingBag, Plus, Minus, ChevronRight, Loader2 } from 'lucide-react'
 import { useCart } from '@/lib/store'
+import { useOrderStream } from '@/components/realtime/useOrderStream'
 import Image from 'next/image'
 
 interface CartPanelProps {
@@ -58,6 +59,15 @@ export function CartPanel({ onClose }: CartPanelProps) {
         setSubmitting(false)
     }
   }
+
+  useOrderStream((event) => {
+    if (step === 'success' && event.channel === 'orders:ready') {
+        const payload = typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload
+        if (payload.orderNumber === orderNumber) {
+            alert('🎉 YOUR DELICIOUS ORDER IS READY TO DELIVER! 🥘\nEnjoy your meal at Swad Anusar.')
+        }
+    }
+  })
 
   return (
     <motion.div 

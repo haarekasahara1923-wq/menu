@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useOrderStream } from '@/components/realtime/useOrderStream'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, ChevronRight, CheckCircle, Receipt, Clock, MapPin, User, Phone } from 'lucide-react'
+import { ShoppingBag, ChevronRight, CheckCircle, Receipt, Clock, MapPin, User, Phone, MessageSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
@@ -167,6 +167,15 @@ export default function ReceptionOrders() {
                                                 Confirm
                                             </button>
                                         )}
+                                        <button 
+                                            onClick={() => {
+                                                const message = encodeURIComponent(`Namaste ${order.customerName}! Your delicious order #${order.orderNumber} from Swad Anusar is ready to be delivered. Enjoy your meal! 🥘`)
+                                                window.open(`https://wa.me/${order.customerPhone}?text=${message}`, '_blank')
+                                            }}
+                                            className="bg-[#25D366] text-white p-2.5 rounded-xl hover:bg-[#128C7E] transition-all"
+                                        >
+                                            <MessageSquare className="w-4 h-4" />
+                                        </button>
                                         <button className="bg-white border border-border p-2.5 rounded-xl hover:bg-border/20 transition-colors">
                                             <Receipt className="w-4 h-4 text-text-secondary" />
                                         </button>
