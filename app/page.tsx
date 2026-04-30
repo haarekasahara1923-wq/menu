@@ -17,11 +17,6 @@ export default function Home() {
         <div className="absolute bottom-[-10%] right-[-20%] w-[120%] h-[50%] bg-[#F4A261]/20 blur-[120px] rounded-[100%] pointer-events-none"></div>
 
         <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
-          {/* Brand Logo Main */}
-          <div className="mb-8 transform hover:scale-105 transition-transform duration-500">
-            <Logo width={120} height={120} className="border-4 border-white/10 shadow-[0_0_50px_rgba(181,69,27,0.3)]" />
-          </div>
-
           {/* Title */}
           <h1 className="text-5xl sm:text-6xl font-bold text-white mb-4 font-playfair tracking-tight leading-tight">
             Swad <span className="italic text-[#F4A261]">Anusar</span>

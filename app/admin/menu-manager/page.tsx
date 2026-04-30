@@ -20,6 +20,7 @@ export default function MenuManager() {
     isVeg: true,
     images: ['', '', '']
   })
+  const [newCategoryName, setNewCategoryName] = useState('')
   const [saving, setSaving] = useState(false)
 
   const handleAddDish = async (e: React.FormEvent) => {
@@ -43,6 +44,32 @@ export default function MenuManager() {
     } else {
       toast.error('Failed to add dish')
     }
+  }
+
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newCategoryName) return
+    setSaving(true)
+    const res = await fetch('/api/admin/categories', {
+      method: 'POST',
+      body: JSON.stringify({ name: newCategoryName }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    setSaving(false)
+    if (res.ok) {
+      toast.success('Category added')
+      setNewCategoryName('')
+      fetchData()
+    } else {
+      toast.error('Failed to add category')
+    }
+  }
+
+  const deleteCategory = async (id: string) => {
+    if (!confirm('Delete this category? This might affect dishes in this category.')) return
+    await fetch(`/api/admin/categories/${id}`, { method: 'DELETE' })
+    toast.success('Category deleted')
+    fetchData()
   }
 
   useEffect(() => {
@@ -71,6 +98,11 @@ export default function MenuManager() {
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
       <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
+            <div className="flex items-center gap-2 text-sm text-text-secondary mb-1">
+              <Link href="/admin" className="hover:text-primary transition-colors">Dashboard</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span>Menu Manager</span>
+            </div>
             <h1 className="text-4xl font-bold font-playfair text-primary">Menu Manager</h1>
             <p className="text-text-secondary">Configure your restaurant's offerings</p>
         </div>
@@ -149,10 +181,40 @@ export default function MenuManager() {
             </div>
         </div>
       ) : (
-          <div className="max-w-2xl mx-auto space-y-4">
-              {/* Category management implementation... */}
-              <div className="text-center py-20 opacity-40">
-                  <p>Category Management Under Construction</p>
+          <div className="max-w-2xl mx-auto space-y-6">
+              <div className="bg-white p-8 rounded-[2.5rem] border border-border shadow-sm">
+                  <h2 className="text-2xl font-bold font-playfair mb-6">Add New Category</h2>
+                  <form onSubmit={handleAddCategory} className="flex gap-4">
+                      <input 
+                        type="text" 
+                        value={newCategoryName}
+                        onChange={e => setNewCategoryName(e.target.value)}
+                        placeholder="Category Name (e.g. Main Course)" 
+                        className="flex-1 bg-background border border-border p-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20"
+                        required
+                      />
+                      <button disabled={saving} className="bg-primary text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:bg-primary-light transition-all disabled:opacity-50">
+                          {saving ? 'Adding...' : 'Add'}
+                      </button>
+                  </form>
+              </div>
+
+              <div className="space-y-4">
+                  <h3 className="font-bold text-lg px-2">Existing Categories ({categories.length})</h3>
+                  {categories.map(category => (
+                      <div key={category.id} className="bg-white p-5 rounded-3xl border border-border flex justify-between items-center hover:border-primary/50 transition-all group">
+                          <div>
+                              <p className="font-bold">{category.name}</p>
+                              <p className="text-xs text-text-secondary">{category.dishesCount || 0} items in this category</p>
+                          </div>
+                          <button 
+                            onClick={() => deleteCategory(category.id)}
+                            className="p-3 bg-red-50 text-red-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"
+                          >
+                              <Trash2 className="w-5 h-5" />
+                          </button>
+                      </div>
+                  ))}
               </div>
           </div>
       )}
