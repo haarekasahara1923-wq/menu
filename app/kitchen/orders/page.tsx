@@ -37,11 +37,31 @@ export default function KitchenOrders() {
         method: 'PATCH',
         body: JSON.stringify({ status })
     })
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o))
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o))
     if (status === 'ready') {
         setOrders(prev => prev.filter(o => o.id !== orderId))
     }
   }
+
+  // Timing Logic: Check for delays every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+        orders.forEach(order => {
+            if (order.status === 'preparing') {
+                const diff = (Date.now() - new Date(order.updatedAt).getTime()) / (1000 * 60)
+                if (diff > 15) {
+                    toast.error(`TIME EXCEEDED: Order #${order.orderNumber} is over 15m!`, {
+                        description: 'Please finish and mark as ready.',
+                        duration: 5000,
+                        id: `kitchen-delay-${order.id}`
+                    })
+                }
+            }
+        })
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [orders])
 
   return (
     <div className="min-h-screen bg-[#1A0A00] text-white p-6">

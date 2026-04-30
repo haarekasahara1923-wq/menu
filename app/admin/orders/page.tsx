@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ShoppingBag, ChevronRight, Clock, MapPin, User, Search, Filter } from 'lucide-react'
+import { ShoppingBag, ChevronRight, Clock, MapPin, User, Search, Receipt, X } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+
+  const [selectedOrder, setSelectedOrder] = useState<any>(null)
 
   useEffect(() => {
     fetch('/api/reception/orders')
@@ -19,9 +22,31 @@ export default function AdminOrders() {
       })
   }, [])
 
+  // Timing Logic: Check for delays every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+        orders.forEach(order => {
+            if (order.status === 'preparing') {
+                const diff = (Date.now() - new Date(order.updatedAt).getTime()) / (1000 * 60)
+                if (diff > 15) {
+                    toast.error(`DELAY: Order #${order.orderNumber} (Prep >15m)`, { id: `admin-delay-prep-${order.id}` })
+                }
+            }
+            if (order.status === 'ready') {
+                const diff = (Date.now() - new Date(order.updatedAt).getTime()) / (1000 * 60)
+                if (diff > 5) {
+                    toast.warning(`DELAY: Order #${order.orderNumber} (Ready >5m)`, { id: `admin-delay-ready-${order.id}` })
+                }
+            }
+        })
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [orders])
+
   const filteredOrders = orders.filter(o => 
-    o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-    o.customerName.toLowerCase().includes(search.toLowerCase())
+    o.orderNumber?.toLowerCase().includes(search.toLowerCase()) ||
+    o.customerName?.toLowerCase().includes(search.toLowerCase())
   )
 
   return (
@@ -50,10 +75,6 @@ export default function AdminOrders() {
             className="w-full pl-12 pr-4 py-4 bg-white border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
           />
         </div>
-        <button className="flex items-center gap-2 px-6 py-4 bg-white border border-border rounded-2xl font-bold text-text-secondary hover:bg-border/10 transition-all shadow-sm">
-          <Filter className="w-5 h-5" />
-          Filters
-        </button>
       </div>
 
       {loading ? (
@@ -120,7 +141,10 @@ export default function AdminOrders() {
                 >
                   Manage Order
                 </Link>
-                <button className="px-4 bg-primary text-white py-3 rounded-xl text-xs font-bold hover:bg-primary-light transition-all">
+                <button 
+                  onClick={() => setSelectedOrder(order)}
+                  className="px-4 bg-primary text-white py-3 rounded-xl text-xs font-bold hover:bg-primary-light transition-all"
+                >
                   Receipt
                 </button>
               </div>
@@ -133,6 +157,50 @@ export default function AdminOrders() {
           <h3 className="text-xl font-bold font-playfair opacity-40">No orders found</h3>
           <p className="text-text-secondary opacity-40">Try adjusting your filters or search</p>
         </div>
+      )}
+
+      {/* Receipt Modal */}
+      {selectedOrder && (
+          <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-4 flex items-center justify-center">
+              <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
+                  <div className="flex justify-between items-start mb-8">
+                      <div>
+                          <h2 className="text-2xl font-bold font-playfair">Receipt</h2>
+                          <p className="text-xs text-text-secondary">Order #{selectedOrder.orderNumber}</p>
+                      </div>
+                      <button onClick={() => setSelectedOrder(null)} className="p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"><X /></button>
+                  </div>
+                  
+                  <div className="border-y border-dashed border-border py-6 space-y-4 mb-6">
+                      {selectedOrder.items?.map((item: any, i: number) => (
+                          <div key={i} className="flex justify-between text-sm">
+                              <span>{item.quantity}x {item.dishName}</span>
+                              <span className="font-bold">₹{item.totalPrice}</span>
+                          </div>
+                      ))}
+                  </div>
+
+                  <div className="space-y-2 mb-8">
+                      <div className="flex justify-between text-sm text-text-secondary">
+                          <span>Subtotal</span>
+                          <span>₹{selectedOrder.subtotal}</span>
+                      </div>
+                      <div className="flex justify-between text-xl font-bold pt-2 border-t border-border">
+                          <span>Total</span>
+                          <span className="text-primary">₹{selectedOrder.total}</span>
+                      </div>
+                  </div>
+
+                  <button 
+                    onClick={() => window.print()}
+                    className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-primary-light transition-all flex items-center justify-center gap-2"
+                  >
+                      <Receipt className="w-5 h-5" />
+                      Print Receipt
+                  </button>
+              </motion.div>
+          </div>
       )}
     </div>
   )

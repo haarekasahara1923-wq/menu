@@ -43,8 +43,38 @@ export default function ReceptionOrders() {
         method: 'PATCH',
         body: JSON.stringify({ status })
     })
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o))
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o))
   }
+
+  // Timing Logic: Check for delays every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+        orders.forEach(order => {
+            if (order.status === 'preparing') {
+                const diff = (Date.now() - new Date(order.updatedAt).getTime()) / (1000 * 60)
+                if (diff > 15) {
+                    toast.error(`DELAY ALERT: Order #${order.orderNumber} is in preparation for >15 mins!`, {
+                        description: 'Please check with the kitchen immediately.',
+                        duration: 5000,
+                        id: `delay-prep-${order.id}`
+                    })
+                }
+            }
+            if (order.status === 'ready') {
+                const diff = (Date.now() - new Date(order.updatedAt).getTime()) / (1000 * 60)
+                if (diff > 5) {
+                    toast.warning(`DELIVERY ALERT: Order #${order.orderNumber} is waiting for delivery >5 mins!`, {
+                        description: 'Notify the customer or delivery staff.',
+                        duration: 5000,
+                        id: `delay-ready-${order.id}`
+                    })
+                }
+            }
+        })
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [orders])
 
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
