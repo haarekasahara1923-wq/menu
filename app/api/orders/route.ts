@@ -12,8 +12,8 @@ export async function POST(req: NextRequest) {
         address, name, phone, notes 
     } = data
 
-    let orderId: string
-    let orderNumber: string
+    let orderId: string | undefined
+    let orderNumber: string | undefined
     let isReorder = false
 
     // 1. Check for existing active order for this table (Dine-in only)
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. If no existing order, create new one
-    if (!orderId!) {
+    if (!orderId) {
         orderNumber = `OR-${Math.floor(1000 + Math.random() * 9000)}`
         const newOrder = await db.insert(orders).values({
             orderNumber,
