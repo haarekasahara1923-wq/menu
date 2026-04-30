@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { 
   TrendingUp, Users, ShoppingBag, Package, 
-  ChevronRight, AlertTriangle 
+  ChevronRight, AlertTriangle, Settings 
 } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -82,6 +82,19 @@ export default function AdminDashboard() {
                 <div>
                     <h3 className="font-bold">QR Generator</h3>
                     <p className="text-xs text-text-secondary">Branded menu QR codes</p>
+                </div>
+                </div>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            <Link href="/admin/settings" className="flex items-center justify-between p-6 bg-white rounded-3xl border border-border hover:border-primary transition-all group text-left">
+                <div className="flex items-center gap-4 text-left">
+                    <div className="w-12 h-12 bg-gray-50 text-gray-600 rounded-2xl flex items-center justify-center text-left">
+                        <Settings className="w-6 h-6" />
+                    </div>
+                <div>
+                    <h3 className="font-bold">Settings</h3>
+                    <p className="text-xs text-text-secondary">Restaurant profile & info</p>
                 </div>
                 </div>
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
