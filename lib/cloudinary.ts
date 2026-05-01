@@ -42,7 +42,7 @@ export async function uploadDishImage(file: Buffer, dishName: string) {
         folder: 'swad-anusar/dishes',
         public_id: `${dishName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`,
         transformation: [
-          { width: 800, height: 600, crop: 'fill', quality: 'auto', fetch_format: 'auto' }
+          { width: 1600, height: 1200, crop: 'limit', quality: 'auto', fetch_format: 'auto' }
         ],
       },
       (error, result) => {
