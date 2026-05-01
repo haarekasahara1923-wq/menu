@@ -29,14 +29,15 @@ export function Footer() {
             </div>
           </div>
           <p className="text-gray-400 max-w-md font-poppins leading-relaxed mb-8">
-            Experience authentic flavors at Govindpuri, Gwalior. We take pride in serving 
-            delicious, home-style food prepared with the freshest ingredients and a touch of love.
+            Established in 2020, Swad Anusar is Gwalior's premier pure vegetarian café and restaurant. 
+            We are dedicated to serving authentic, home-style flavors prepared with the freshest 
+            ingredients and a touch of love. Experience a taste that feels like home.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-primary/20 transition-colors">
+            <a href="https://instagram.com" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-primary/20 transition-colors">
               <InstagramIcon className="w-5 h-5 text-primary" />
             </a>
-            <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-primary/20 transition-colors">
+            <a href="https://facebook.com" target="_blank" className="p-2 bg-white/5 rounded-full hover:bg-primary/20 transition-colors">
               <FacebookIcon className="w-5 h-5 text-primary" />
             </a>
           </div>
@@ -48,7 +49,7 @@ export function Footer() {
           <ul className="space-y-4 font-poppins text-gray-400">
             <li><a href="/menu" className="hover:text-primary transition-colors">Digital Menu</a></li>
             <li><a href="/#about" className="hover:text-primary transition-colors">About Us</a></li>
-            <li><a href="/#contact" className="hover:text-primary transition-colors">Contact</a></li>
+            <li><a href="tel:+919977623769" className="hover:text-primary transition-colors">Contact</a></li>
             <li><a href="/auth/login" className="hover:text-primary transition-colors">Staff Portal</a></li>
           </ul>
         </div>
@@ -63,7 +64,7 @@ export function Footer() {
             </li>
             <li className="flex gap-3">
               <Phone className="w-5 h-5 text-primary shrink-0" />
-              <span>+91 98765 43210</span>
+              <a href="tel:+919977623769" className="hover:text-primary transition-colors">+91 99776 23769</a>
             </li>
             <li className="flex gap-3">
               <Mail className="w-5 h-5 text-primary shrink-0" />

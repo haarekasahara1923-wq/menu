@@ -45,9 +45,9 @@ export default function MenuPage() {
             </div>
           </div>
           <div className="flex-shrink-0 ml-2">
-            <button className="bg-white/20 p-2.5 md:p-3 rounded-full backdrop-blur-md transition hover:bg-white/30">
+            <a href="tel:+919977623769" className="bg-white/20 p-2.5 md:p-3 rounded-full backdrop-blur-md transition hover:bg-white/30 block">
               <Phone className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
+            </a>
           </div>
         </div>
       </header>
