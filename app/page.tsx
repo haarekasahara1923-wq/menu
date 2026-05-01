@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, MapPin, Phone } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { Footer } from '@/components/Footer'
 
