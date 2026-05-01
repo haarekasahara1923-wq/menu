@@ -8,16 +8,20 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 overflow-x-hidden">
         {/* Hero Section */}
-        <section className="relative py-20 md:py-32 flex flex-col items-center justify-center p-6 text-center bg-[#1A0A00]">
+        <section className="relative py-32 md:py-48 flex flex-col items-center justify-center p-6 text-center bg-[#1A0A00]">
+            {/* Background Image with Overlay */}
+            <div className="absolute inset-0 z-0">
+                <img 
+                    src="/restaurant-interior.png" 
+                    alt="Swad Anusar Interior" 
+                    className="w-full h-full object-cover opacity-30" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#1A0A00]/80 via-transparent to-[#1A0A00]"></div>
+            </div>
+
             {/* Logo - Absolute on Desktop, Centered in Flow on Mobile */}
             <div className="md:absolute md:top-8 md:left-8 z-20 mb-10 md:mb-0">
                 <Logo width={60} height={60} className="md:w-[70px] md:h-[70px]" />
-            </div>
-
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-20%] w-[120%] h-[100%] bg-primary/20 blur-[120px] rounded-[100%]"></div>
-                <div className="absolute bottom-[-10%] right-[-20%] w-[120%] h-[100%] bg-[#F4A261]/10 blur-[120px] rounded-[100%]"></div>
             </div>
 
             <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
@@ -56,11 +60,11 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-24 bg-white">
+        <section id="about" className="py-24 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                 <div className="relative order-2 md:order-1">
-                    <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
-                        <img src="/logo.jpg" alt="Swad Anusar" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
+                    <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl">
+                        <img src="/family-dining.png" alt="Family Dining at Swad Anusar" className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" />
                     </div>
                     <div className="absolute -bottom-8 -right-8 bg-primary p-8 rounded-[2rem] text-white shadow-xl hidden lg:block">
                         <p className="text-4xl font-bold font-playfair mb-1">4+</p>
