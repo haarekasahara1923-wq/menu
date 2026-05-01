@@ -15,7 +15,10 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const data = await req.json()
+  const body = await req.json()
+  // Remove fields that should not be updated manually
+  const { id, createdAt, ...data } = body
+
   const info = await db.select().from(restaurantInfo).limit(1)
 
   if (info.length === 0) {
