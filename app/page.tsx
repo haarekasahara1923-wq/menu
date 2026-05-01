@@ -6,49 +6,111 @@ import { Footer } from '@/components/Footer'
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 relative flex flex-col items-center justify-center p-6 text-center overflow-hidden bg-[#1A0A00]">
-        {/* Logo - Absolute on Desktop, Centered in Flow on Mobile */}
-        <div className="md:absolute md:top-8 md:left-8 z-20 mb-8 md:mb-0">
-          <Logo width={60} height={60} className="md:w-[70px] md:h-[70px]" />
-        </div>
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="relative min-h-[90vh] flex flex-col items-center justify-center p-6 text-center overflow-hidden bg-[#1A0A00]">
+            {/* Logo - Absolute on Desktop, Centered in Flow on Mobile */}
+            <div className="md:absolute md:top-8 md:left-8 z-20 mb-8 md:mb-0">
+            <Logo width={60} height={60} className="md:w-[70px] md:h-[70px]" />
+            </div>
 
-        {/* Background Decorative Elements */}
-        <div className="absolute top-[-10%] left-[-20%] w-[120%] h-[50%] bg-primary/40 blur-[100px] rounded-[100%] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-20%] w-[120%] h-[50%] bg-[#F4A261]/20 blur-[120px] rounded-[100%] pointer-events-none"></div>
+            {/* Background Decorative Elements */}
+            <div className="absolute top-[-10%] left-[-20%] w-[120%] h-[50%] bg-primary/40 blur-[100px] rounded-[100%] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-20%] w-[120%] h-[50%] bg-[#F4A261]/20 blur-[120px] rounded-[100%] pointer-events-none"></div>
 
-        <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
-          {/* Title */}
-          <h1 className="text-5xl sm:text-7xl font-bold text-white mb-4 font-playfair tracking-tight leading-tight">
-            Swad <span className="italic text-[#F4A261]">Anusar</span>
-          </h1>
-          
-          {/* Subtitle */}
-          <p className="text-base text-gray-300 mb-10 font-poppins font-light leading-relaxed px-4">
-            Experience authentic flavors at Govindpuri, Gwalior. <br/> 
-            <span className="font-medium text-white/90">Taste that feels like home.</span>
-          </p>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col w-full gap-4">
-            <Link 
-              href="/menu" 
-              className="group relative flex items-center justify-center w-full px-8 py-4 bg-gradient-to-r from-primary to-[#D4622D] text-white rounded-2xl font-poppins font-semibold shadow-[0_10px_30px_rgba(181,69,27,0.4)] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-              <span className="relative z-10 flex items-center gap-2 text-lg">
-                View Digital Menu
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
+            <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
+            {/* Title */}
+            <h1 className="text-5xl sm:text-7xl font-bold text-white mb-4 font-playfair tracking-tight leading-tight">
+                Swad <span className="italic text-[#F4A261]">Anusar</span>
+            </h1>
             
-            <Link 
-              href="/auth/login" 
-              className="flex items-center justify-center w-full px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 text-gray-300 rounded-2xl font-poppins font-medium hover:bg-white/10 hover:text-white transition-all duration-300"
-            >
-              Staff Login
-            </Link>
-          </div>
-        </div>
+            {/* Subtitle */}
+            <p className="text-base text-gray-300 mb-10 font-poppins font-light leading-relaxed px-4">
+                Experience authentic flavors at Govindpuri, Gwalior. <br/> 
+                <span className="font-medium text-white/90">Taste that feels like home.</span>
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col w-full gap-4">
+                <Link 
+                href="/menu" 
+                className="group relative flex items-center justify-center w-full px-8 py-4 bg-gradient-to-r from-primary to-[#D4622D] text-white rounded-2xl font-poppins font-semibold shadow-[0_10px_30px_rgba(181,69,27,0.4)] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                <span className="relative z-10 flex items-center gap-2 text-lg">
+                    View Digital Menu
+                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                </Link>
+                
+                <Link 
+                href="/auth/login" 
+                className="flex items-center justify-center w-full px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 text-gray-300 rounded-2xl font-poppins font-medium hover:bg-white/10 hover:text-white transition-all duration-300"
+                >
+                Staff Login
+                </Link>
+            </div>
+            </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="py-24 bg-white">
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div className="relative">
+                    <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
+                        <img src="/logo.jpg" alt="Swad Anusar" className="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-700" />
+                    </div>
+                    <div className="absolute -bottom-8 -right-8 bg-primary p-8 rounded-[2rem] text-white shadow-xl hidden md:block">
+                        <p className="text-4xl font-bold font-playfair mb-1">4+</p>
+                        <p className="text-xs uppercase tracking-widest font-bold opacity-80">Years of Excellence</p>
+                    </div>
+                </div>
+                <div>
+                    <h2 className="text-4xl md:text-5xl font-bold font-playfair text-primary mb-6">Our Story</h2>
+                    <p className="text-lg text-text-secondary leading-relaxed mb-6 font-poppins">
+                        Established in 2020, Swad Anusar began with a simple mission: to bring the authentic taste of home-cooked vegetarian meals to Gwalior. 
+                        We believe that food is more than just sustenance; it's a way to connect with our heritage and share love with our community.
+                    </p>
+                    <p className="text-lg text-text-secondary leading-relaxed font-poppins">
+                        Every dish we serve is prepared with the finest ingredients, traditional spices, and a commitment to purity that defines our vegetarian kitchen. 
+                        Whether you're here for a quick snack or a full family meal, we promise an experience that feels like home.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        {/* Contact Section Preview */}
+        <section id="contact" className="py-24 bg-[#FFF8F0]">
+            <div className="max-w-4xl mx-auto px-6 text-center">
+                <h2 className="text-4xl md:text-5xl font-bold font-playfair text-primary mb-6">Visit Us</h2>
+                <p className="text-lg text-text-secondary mb-12 font-poppins">
+                    We are located in the heart of Gwalior, ready to serve you with warmth and hospitality.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-border">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <MapPin className="w-6 h-6 text-primary" />
+                        </div>
+                        <h4 className="font-bold mb-2">Location</h4>
+                        <p className="text-sm text-text-secondary">Govindpuri, Gwalior, MP</p>
+                    </div>
+                    <a href="tel:+919977623769" className="bg-white p-8 rounded-[2rem] shadow-sm border border-border hover:border-primary transition-colors group">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary transition-colors">
+                            <Phone className="w-6 h-6 text-primary group-hover:text-white transition-colors" />
+                        </div>
+                        <h4 className="font-bold mb-2">Call Us</h4>
+                        <p className="text-sm text-text-secondary">+91 99776 23769</p>
+                    </a>
+                    <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-border">
+                        <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Logo width={24} height={24} />
+                        </div>
+                        <h4 className="font-bold mb-2">Since</h4>
+                        <p className="text-sm text-text-secondary">EST. 2020</p>
+                    </div>
+                </div>
+            </div>
+        </section>
       </main>
       <Footer />
     </div>

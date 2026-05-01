@@ -49,7 +49,7 @@ export function Footer() {
           <ul className="space-y-4 font-poppins text-gray-400">
             <li><a href="/menu" className="hover:text-primary transition-colors">Digital Menu</a></li>
             <li><a href="/#about" className="hover:text-primary transition-colors">About Us</a></li>
-            <li><a href="tel:+919977623769" className="hover:text-primary transition-colors">Contact</a></li>
+            <li><a href="/#contact" className="hover:text-primary transition-colors">Contact</a></li>
             <li><a href="/auth/login" className="hover:text-primary transition-colors">Staff Portal</a></li>
           </ul>
         </div>
