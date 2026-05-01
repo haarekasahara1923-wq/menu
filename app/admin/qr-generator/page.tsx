@@ -63,8 +63,8 @@ export default function QRGenerator() {
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
       <header className="mb-10 text-center max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold font-playfair text-primary mb-2">Menu QR Engine</h1>
-        <p className="text-text-secondary">Generate high-quality, branded QR codes for your tables.</p>
+        <h1 className="text-4xl font-bold font-playfair text-primary mb-2 italic">Welcome to Swadanusar</h1>
+        <p className="text-text-secondary">Enjoy the delicious food</p>
       </header>
 
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">

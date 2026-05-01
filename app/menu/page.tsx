@@ -32,21 +32,23 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen font-poppins bg-background flex flex-col">
       {/* Header */}
-      <header className="bg-primary text-white p-6 md:p-8 rounded-b-[2rem] shadow-lg sticky top-0 z-50">
-        <div className="max-w-[1920px] mx-auto w-full flex justify-between items-center px-4 md:px-8">
-          <div className="flex items-center gap-4">
-            <Logo width={50} height={50} className="border-2 border-white/20" />
-            <div>
-              <h1 className="font-playfair text-2xl md:text-3xl font-bold italic">Swad Anusar</h1>
-              <div className="flex items-center text-xs md:text-sm opacity-80 mt-1">
-                <MapPin className="w-3 h-3 mr-1" />
-                <span>Govindpuri, Gwalior</span>
+      <header className="bg-primary text-white p-4 md:p-8 rounded-b-[2rem] shadow-lg sticky top-0 z-50">
+        <div className="max-w-[1920px] mx-auto w-full flex justify-between items-center px-2 md:px-8">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+            <Logo width={45} height={45} className="flex-shrink-0 border-2 border-white/20" />
+            <div className="min-w-0 flex-1">
+              <h1 className="font-playfair text-xl md:text-3xl font-bold italic truncate">Swad Anusar</h1>
+              <div className="flex items-center text-[10px] md:text-sm opacity-80 mt-0.5">
+                <MapPin className="w-2.5 h-2.5 md:w-3 md:h-3 mr-1 flex-shrink-0" />
+                <span className="truncate">Govindpuri, Gwalior</span>
               </div>
             </div>
           </div>
-          <button className="bg-white/20 p-3 rounded-full backdrop-blur-md transition hover:bg-white/30">
-            <Phone className="w-6 h-6" />
-          </button>
+          <div className="flex-shrink-0 ml-2">
+            <button className="bg-white/20 p-2.5 md:p-3 rounded-full backdrop-blur-md transition hover:bg-white/30">
+              <Phone className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+          </div>
         </div>
       </header>
 

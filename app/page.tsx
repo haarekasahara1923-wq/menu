@@ -8,8 +8,8 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 relative flex flex-col items-center justify-center p-6 text-center overflow-hidden bg-[#1A0A00]">
         {/* Logo in Top Left */}
-        <div className="absolute top-8 left-8 z-20">
-          <Logo width={60} height={60} />
+        <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
+          <Logo width={45} height={45} className="md:w-[60px] md:h-[60px]" />
         </div>
 
         {/* Background Decorative Elements */}
