@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 relative flex flex-col items-center justify-center p-6 text-center overflow-hidden bg-[#1A0A00]">
-        {/* Logo in Top Left */}
-        <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
-          <Logo width={45} height={45} className="md:w-[60px] md:h-[60px]" />
+        {/* Logo - Absolute on Desktop, Centered in Flow on Mobile */}
+        <div className="md:absolute md:top-8 md:left-8 z-20 mb-8 md:mb-0">
+          <Logo width={60} height={60} className="md:w-[70px] md:h-[70px]" />
         </div>
 
         {/* Background Decorative Elements */}
@@ -18,7 +18,7 @@ export default function Home() {
 
         <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
           {/* Title */}
-          <h1 className="text-5xl sm:text-6xl font-bold text-white mb-4 font-playfair tracking-tight leading-tight">
+          <h1 className="text-5xl sm:text-7xl font-bold text-white mb-4 font-playfair tracking-tight leading-tight">
             Swad <span className="italic text-[#F4A261]">Anusar</span>
           </h1>
           
