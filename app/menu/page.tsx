@@ -93,7 +93,7 @@ export default function MenuPage() {
               </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8 pb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 md:gap-8 pb-12">
               {loading ? (
                   Array(6).fill(0).map((_, i) => (
                       <div key={i} className="bg-white rounded-[2.5rem] h-[400px] animate-pulse shadow-sm"></div>
