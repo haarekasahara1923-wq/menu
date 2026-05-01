@@ -16,11 +16,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Vercel Serverless Function limit is 4.5MB
-    if (file.size > 4.5 * 1024 * 1024) {
+    // Updated limit to 50MB as requested
+    const MAX_SIZE = 50 * 1024 * 1024; 
+    if (file.size > MAX_SIZE) {
       return NextResponse.json({ 
         error: 'File size too large', 
-        details: 'The image exceeds the 4.5MB limit. Please upload a smaller file or compress the image first.' 
+        details: 'The image exceeds the 50MB limit. Please compress the image or upload a smaller file.' 
       }, { status: 400 })
     }
 
