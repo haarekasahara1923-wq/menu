@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { categories } from '@/lib/db/schema'
+import { dishes } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { auth } from '@/lib/auth'
 import { bustCache } from '@/lib/cache'
@@ -17,10 +17,11 @@ export async function DELETE(
   const { id } = params
 
   try {
-    await db.delete(categories).where(eq(categories.id, id))
+    await db.delete(dishes).where(eq(dishes.id, id))
     await bustCache('menu:all')
     return NextResponse.json({ success: true })
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 })
+  } catch (error: any) {
+    console.error('Error deleting dish:', error)
+    return NextResponse.json({ error: 'Failed to delete dish: ' + error.message }, { status: 500 })
   }
 }

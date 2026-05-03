@@ -58,7 +58,7 @@ export const categories = pgTable('categories', {
 // ─── DISHES ───────────────────────────────────────────────
 export const dishes = pgTable('dishes', {
   id: uuid('id').primaryKey().defaultRandom(),
-  categoryId: uuid('category_id').references(() => categories.id),
+  categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   description: text('description'),
   isVeg: boolean('is_veg').default(true),
@@ -97,7 +97,7 @@ export const orders = pgTable('orders', {
 export const orderItems = pgTable('order_items', {
   id: uuid('id').primaryKey().defaultRandom(),
   orderId: uuid('order_id').references(() => orders.id, { onDelete: 'cascade' }),
-  dishId: uuid('dish_id').references(() => dishes.id),
+  dishId: uuid('dish_id').references(() => dishes.id, { onDelete: 'set null' }),
   dishName: text('dish_name'),
   sizeLabel: text('size_label'),
   unitPrice: numeric('unit_price'),

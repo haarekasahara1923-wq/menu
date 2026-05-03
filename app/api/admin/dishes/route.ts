@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { dishes, categories } from '@/lib/db/schema'
 import { desc, eq } from 'drizzle-orm'
 import { auth } from '@/lib/auth'
+import { bustCache } from '@/lib/cache'
 
 export async function GET() {
   const session = await auth()
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
       images: Array.isArray(images) ? images.filter((img: string) => img.trim() !== '') : [],
     }).returning({ id: dishes.id })
 
+    await bustCache('menu:all')
     return NextResponse.json(result[0])
   } catch (error) {
     console.error('Error adding dish:', error)

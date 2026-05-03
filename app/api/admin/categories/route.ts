@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { categories } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
 import { auth } from '@/lib/auth'
+import { bustCache } from '@/lib/cache'
 
 export async function GET() {
   const result = await db.query.categories.findMany({
@@ -31,6 +32,7 @@ export async function POST(req: NextRequest) {
       displayOrder: 0
     }).returning()
 
+    await bustCache('menu:all')
     return NextResponse.json(result[0])
   } catch (error: any) {
     console.error('Error adding category:', error)
