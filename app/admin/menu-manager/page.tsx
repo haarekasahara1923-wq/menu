@@ -23,28 +23,47 @@ export default function MenuManager() {
   })
   const [newCategoryName, setNewCategoryName] = useState('')
   const [saving, setSaving] = useState(false)
+  const [editingDish, setEditingDish] = useState<any>(null)
 
-  const handleAddDish = async (e: React.FormEvent) => {
+  const handleSaveDish = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newDish.name || !newDish.categoryId || !newDish.price) {
       toast.error('Please fill required fields')
       return
     }
     setSaving(true)
-    const res = await fetch('/api/admin/dishes', {
-      method: 'POST',
+    
+    const url = editingDish ? `/api/admin/dishes/${editingDish.id}` : '/api/admin/dishes'
+    const method = editingDish ? 'PATCH' : 'POST'
+
+    const res = await fetch(url, {
+      method,
       body: JSON.stringify(newDish),
       headers: { 'Content-Type': 'application/json' }
     })
     setSaving(false)
     if (res.ok) {
-      toast.success('Dish added successfully')
+      toast.success(editingDish ? 'Dish updated successfully' : 'Dish added successfully')
       setShowAddDish(false)
+      setEditingDish(null)
       setNewDish({ name: '', description: '', categoryId: '', price: '', isVeg: true, images: ['', '', ''] })
       fetchData()
     } else {
-      toast.error('Failed to add dish')
+      toast.error(editingDish ? 'Failed to update dish' : 'Failed to add dish')
     }
+  }
+
+  const startEditDish = (dish: any) => {
+    setEditingDish(dish)
+    setNewDish({
+      name: dish.name,
+      description: dish.description || '',
+      categoryId: dish.categoryId || '',
+      price: dish.sizes?.[0]?.price?.toString() || '0',
+      isVeg: dish.isVeg ?? true,
+      images: parseImages(dish.images).concat(['', '', '']).slice(0, 3)
+    })
+    setShowAddDish(true)
   }
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -165,7 +184,10 @@ export default function MenuManager() {
                             <div className="flex justify-between items-center mt-4 pt-4 border-t border-border/50">
                                 <span className="font-bold text-primary">₹{dish.sizes?.[0]?.price || 0}</span>
                                 <div className="flex gap-2">
-                                    <button className="p-2 bg-[#FFF8F0] text-text-secondary rounded-xl hover:bg-primary/10 hover:text-primary transition-all">
+                                    <button 
+                                        onClick={() => startEditDish(dish)}
+                                        className="p-2 bg-[#FFF8F0] text-text-secondary rounded-xl hover:bg-primary/10 hover:text-primary transition-all"
+                                    >
                                         <Edit2 className="w-4 h-4" />
                                     </button>
                                     <button 
@@ -225,11 +247,15 @@ export default function MenuManager() {
           <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-4 flex items-center justify-center overflow-y-auto">
               <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-2xl rounded-[2.5rem] p-8 shadow-2xl my-8">
                   <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-2xl font-bold font-playfair">Add New Dish</h2>
-                      <button onClick={() => setShowAddDish(false)} className="p-2 bg-background rounded-full hover:bg-red-50 hover:text-red-500 transition-all"><X /></button>
+                      <h2 className="text-2xl font-bold font-playfair">{editingDish ? 'Edit Dish' : 'Add New Dish'}</h2>
+                      <button onClick={() => {
+                          setShowAddDish(false)
+                          setEditingDish(null)
+                          setNewDish({ name: '', description: '', categoryId: '', price: '', isVeg: true, images: ['', '', ''] })
+                      }} className="p-2 bg-background rounded-full hover:bg-red-50 hover:text-red-500 transition-all"><X /></button>
                   </div>
                   
-                  <form onSubmit={handleAddDish} className="space-y-4">
+                  <form onSubmit={handleSaveDish} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="text-xs font-bold text-text-secondary uppercase mb-1 block">Dish Name *</label>
@@ -330,7 +356,7 @@ export default function MenuManager() {
                     </div>
 
                     <button disabled={saving} type="submit" className="w-full bg-primary hover:bg-primary-light text-white py-4 rounded-2xl font-bold shadow-lg transition-all mt-6 disabled:opacity-50">
-                      {saving ? 'Saving...' : 'Save Dish'}
+                      {saving ? 'Saving...' : (editingDish ? 'Update Dish' : 'Save Dish')}
                     </button>
                   </form>
               </motion.div>
