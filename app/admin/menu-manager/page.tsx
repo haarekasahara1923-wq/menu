@@ -244,8 +244,8 @@ export default function MenuManager() {
       
       {/* Add Dish Modal */}
       {showAddDish && (
-          <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-4 flex items-center justify-center overflow-y-auto">
-              <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-2xl rounded-[2.5rem] p-8 shadow-2xl my-8">
+          <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-4 flex sm:items-center items-start justify-center overflow-y-auto">
+              <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white w-full max-w-2xl rounded-3xl sm:rounded-[2.5rem] p-5 sm:p-8 shadow-2xl my-4 sm:my-8">
                   <div className="flex justify-between items-center mb-6">
                       <h2 className="text-2xl font-bold font-playfair">{editingDish ? 'Edit Dish' : 'Add New Dish'}</h2>
                       <button onClick={() => {
