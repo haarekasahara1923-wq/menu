@@ -43,14 +43,17 @@ export default function KitchenOrders() {
 
   const updateStatus = async (orderId: string, status: string) => {
     toast.dismiss(`kitchen-delay-${orderId}`)
+    // Optimistic: remove immediately if marking ready, else update status
+    if (status === 'ready') {
+      setOrders(prev => prev.filter(o => o.id !== orderId))
+    } else {
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o))
+    }
     await fetch(`/api/orders/${orderId}`, {
         method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
     })
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o))
-    if (status === 'ready') {
-        setOrders(prev => prev.filter(o => o.id !== orderId))
-    }
   }
 
   // Timing Logic: Check for delays every 30 seconds
