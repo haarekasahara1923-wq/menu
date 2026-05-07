@@ -14,8 +14,18 @@ export default function ReceptionOrders() {
   useOrderStream((event) => {
     if (event.channel === 'orders:new') {
         const payload = typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload
-        setOrders(prev => [payload, ...prev])
-        toast.success(`New Order: #${payload.orderNumber}`)
+        // Deduplicate: ignore if we already have this order in state
+        setOrders(prev => {
+            if (prev.some(o => o.id === payload.id)) return prev
+            toast.success(`New Order: #${payload.orderNumber}`)
+            return [payload, ...prev]
+        })
+    } else if (event.channel === 'orders:updated') {
+        const payload = typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload
+        setOrders(prev => prev.some(o => o.id === payload.id)
+            ? prev.map(o => o.id === payload.id ? { ...o, ...payload } : o)
+            : [payload, ...prev]
+        )
     } else if (event.channel === 'orders:ready') {
         const payload = typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload
         setOrders(prev => prev.map(o => o.id === payload.id ? { ...o, status: 'ready' } : o))

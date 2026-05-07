@@ -1,30 +1,46 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 
 export function useOrderStream(onEvent: (data: any) => void) {
-  const connect = useCallback(() => {
-    const es = new EventSource('/api/orders/stream')
+  // Keep a stable ref to the latest callback so the EventSource connection
+  // is never recreated just because the parent re-rendered with a new
+  // inline function reference.
+  const callbackRef = useRef(onEvent)
+  useEffect(() => {
+    callbackRef.current = onEvent
+  })
 
-    es.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data)
-        onEvent(data)
-      } catch (err) { 
-        console.error('SSE Parse Error:', err)
+  useEffect(() => {
+    let es: EventSource
+    let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+
+    function connect() {
+      es = new EventSource('/api/orders/stream')
+
+      es.onmessage = (e) => {
+        // Ignore heartbeat comments (empty data)
+        if (!e.data || e.data.startsWith(':')) return
+        try {
+          const data = JSON.parse(e.data)
+          callbackRef.current(data)
+        } catch (err) {
+          console.error('SSE Parse Error:', err)
+        }
+      }
+
+      es.onerror = () => {
+        es.close()
+        // Reconnect after 5 s, but only if the component is still mounted
+        reconnectTimer = setTimeout(connect, 5000)
       }
     }
 
-    es.onerror = () => {
-      es.close()
-      setTimeout(connect, 5000) // Reconnect after 5s
+    connect()
+
+    return () => {
+      if (reconnectTimer) clearTimeout(reconnectTimer)
+      es?.close()
     }
-
-    return es
-  }, [onEvent])
-
-  useEffect(() => {
-    const es = connect()
-    return () => es.close()
-  }, [connect])
+  }, []) // Empty deps — connect ONCE per mount, never recreate on re-render
 }

@@ -18,11 +18,20 @@ export default function KitchenOrders() {
   useOrderStream((event) => {
     if (event.channel === 'orders:new') {
         const payload = typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload
-        setOrders(prev => [payload, ...prev])
-        toast.info(`New Order: #${payload.orderNumber}`)
-        playChime()
+        // Deduplicate: ignore if we already have this order in state
+        setOrders(prev => {
+            if (prev.some(o => o.id === payload.id)) return prev
+            toast.info(`New Order: #${payload.orderNumber}`)
+            playChime()
+            return [payload, ...prev]
+        })
+    } else if (event.channel === 'orders:updated') {
+        const payload = typeof event.payload === 'string' ? JSON.parse(event.payload) : event.payload
+        setOrders(prev => prev.some(o => o.id === payload.id)
+            ? prev.map(o => o.id === payload.id ? { ...o, ...payload } : o)
+            : [payload, ...prev]
+        )
     }
-    // Handle updates...
   })
 
   useEffect(() => {

@@ -11,39 +11,58 @@ export async function GET(req: NextRequest) {
   if (!role) return new Response('Unauthorized', { status: 401 })
 
   const encoder = new TextEncoder()
+
+  // Channels this role should receive
+  const channels =
+    role === 'kitchen'
+      ? ['orders:new', 'orders:updated']
+      : ['orders:new', 'orders:updated', 'orders:ready']
+
+  // Track how many events we have already sent per channel (cursor approach).
+  // We start by recording the CURRENT list length so we only pick up events
+  // that arrive AFTER this connection was established.
+  const cursors: Record<string, number> = {}
+  for (const ch of channels) {
+    const len = await redis.llen(`recent:${ch}`)
+    cursors[ch] = len   // everything at index >= len is "not yet seen"
+  }
+
   const stream = new ReadableStream({
     async start(controller) {
-      // Subscribe to relevant channels based on role
-      const channels =
-        role === 'kitchen'
-          ? ['orders:new', 'orders:updated']
-          : ['orders:new', 'orders:updated', 'orders:ready']
+      // Send a heartbeat comment immediately so the browser knows the stream is alive
+      controller.enqueue(encoder.encode(': ping\n\n'))
 
-      // Use Upstash Redis subscribe (long-polling fallback for serverless)
-      // Poll Redis for new messages every 2 seconds
       const pollInterval = setInterval(async () => {
         try {
           for (const channel of channels) {
-            const messages = await redis.lrange(`recent:${channel}`, 0, 4)
-            if (messages && messages.length > 0) {
-              for (const msg of messages) {
+            const currentLen = await redis.llen(`recent:${channel}`)
+            const prev = cursors[channel]
+
+            if (currentLen > prev) {
+              // New events were pushed. Redis list is newest-first (lpush),
+              // so indices 0..(currentLen-prev-1) are the new ones.
+              const newCount = currentLen - prev
+              const newMessages = await redis.lrange(`recent:${channel}`, 0, newCount - 1)
+
+              // Reverse so oldest new event is sent first
+              for (const msg of newMessages.reverse()) {
                 controller.enqueue(
                   encoder.encode(`data: ${JSON.stringify({ channel, payload: msg })}\n\n`)
                 )
               }
-              // Clear recent after sending? Or just keep sending newest?
-              // The frontend should handle deduplication based on ID or timestamp.
+
+              cursors[channel] = currentLen
             }
           }
         } catch {
           clearInterval(pollInterval)
-          controller.close()
+          try { controller.close() } catch {}
         }
-      }, 5000)
+      }, 3000)
 
       req.signal.addEventListener('abort', () => {
         clearInterval(pollInterval)
-        controller.close()
+        try { controller.close() } catch {}
       })
     }
   })
@@ -51,8 +70,9 @@ export async function GET(req: NextRequest) {
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no',
     },
   })
 }
