@@ -18,18 +18,21 @@ export async function GET(req: NextRequest) {
       ? ['orders:new', 'orders:updated']
       : ['orders:new', 'orders:updated', 'orders:ready']
 
-  // Track how many events we have already sent per channel (cursor approach).
-  // We start by recording the CURRENT list length so we only pick up events
-  // that arrive AFTER this connection was established.
+  // ── Cursor approach ──────────────────────────────────────────────────────
+  // Record CURRENT list length at connection time.
+  // Only events pushed AFTER this point will be forwarded.
   const cursors: Record<string, number> = {}
   for (const ch of channels) {
     const len = await redis.llen(`recent:${ch}`)
-    cursors[ch] = len   // everything at index >= len is "not yet seen"
+    cursors[ch] = len
   }
+
+  // ── Per-connection dedup: track event IDs already sent this session ──────
+  const sentIds = new Set<string>()
 
   const stream = new ReadableStream({
     async start(controller) {
-      // Send a heartbeat comment immediately so the browser knows the stream is alive
+      // Immediate heartbeat so the browser knows the connection is live
       controller.enqueue(encoder.encode(': ping\n\n'))
 
       const pollInterval = setInterval(async () => {
@@ -39,13 +42,25 @@ export async function GET(req: NextRequest) {
             const prev = cursors[channel]
 
             if (currentLen > prev) {
-              // New events were pushed. Redis list is newest-first (lpush),
-              // so indices 0..(currentLen-prev-1) are the new ones.
+              // Newest-first list (lpush). New items are at indices 0..(diff-1).
               const newCount = currentLen - prev
               const newMessages = await redis.lrange(`recent:${channel}`, 0, newCount - 1)
 
-              // Reverse so oldest new event is sent first
+              // Reverse → oldest new event sent first
               for (const msg of newMessages.reverse()) {
+                // Parse to extract a stable event ID for dedup
+                let parsedId: string
+                try {
+                  const parsed = JSON.parse(msg as string)
+                  // Key = channel + orderId + createdAt
+                  parsedId = `${channel}:${parsed?.id ?? ''}:${parsed?.createdAt ?? ''}`
+                } catch {
+                  parsedId = `${channel}:${msg}`
+                }
+
+                if (sentIds.has(parsedId)) continue  // already sent, skip
+                sentIds.add(parsedId)
+
                 controller.enqueue(
                   encoder.encode(`data: ${JSON.stringify({ channel, payload: msg })}\n\n`)
                 )
@@ -58,7 +73,7 @@ export async function GET(req: NextRequest) {
           clearInterval(pollInterval)
           try { controller.close() } catch {}
         }
-      }, 3000)
+      }, 4000) // 4 s poll — fast enough, avoids hammering Redis
 
       req.signal.addEventListener('abort', () => {
         clearInterval(pollInterval)
