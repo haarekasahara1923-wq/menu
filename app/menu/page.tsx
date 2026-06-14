@@ -9,6 +9,8 @@ import { CategoryTabs } from '@/components/menu/CategoryTabs'
 import { CartPanel } from '@/components/menu/CartPanel'
 import { Logo } from '@/components/Logo'
 import { Footer } from '@/components/Footer'
+import { BottomNav } from '@/components/navigation/BottomNav'
+import { HamburgerMenu } from '@/components/navigation/HamburgerMenu'
 
 export default function MenuPage() {
   const [categories, setCategories] = useState<any[]>([])
@@ -35,6 +37,7 @@ export default function MenuPage() {
       <header className="bg-primary text-white p-4 md:p-8 rounded-b-[2rem] shadow-lg sticky top-0 z-50">
         <div className="max-w-[1920px] mx-auto w-full flex justify-between items-center px-2 md:px-8">
           <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+            <HamburgerMenu />
             <Logo width={45} height={45} className="flex-shrink-0 border-2 border-white/20" />
             <div className="min-w-0 flex-1">
               <h1 className="font-playfair text-xl md:text-3xl font-bold italic truncate">Swad Anusar</h1>
@@ -114,7 +117,7 @@ export default function MenuPage() {
           <motion.div 
             initial={{ y: 100 }}
             animate={{ y: 0 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[450px] z-50 pointer-events-none"
+            className="fixed bottom-24 md:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[450px] z-50 pointer-events-none"
           >
             <button 
                 onClick={() => setIsCartOpen(true)}
@@ -146,6 +149,8 @@ export default function MenuPage() {
       </AnimatePresence>
       
       <Footer />
+      <div className="md:hidden h-16"></div> {/* Spacer for BottomNav */}
+      <BottomNav />
     </div>
   )
 }

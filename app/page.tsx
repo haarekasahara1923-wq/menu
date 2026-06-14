@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { ChevronRight, MapPin, Phone } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { Footer } from '@/components/Footer'
+import { BottomNav } from '@/components/navigation/BottomNav'
+import { HamburgerMenu } from '@/components/navigation/HamburgerMenu'
 
 export default function Home() {
   return (
@@ -19,9 +21,14 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-b from-[#1A0A00]/80 via-transparent to-[#1A0A00]"></div>
             </div>
 
+            {/* Top Bar for Mobile */}
+            <div className="absolute top-6 left-0 right-0 px-4 z-30 flex justify-start items-center md:hidden">
+                <HamburgerMenu />
+            </div>
+
             {/* Logo - Fixed at top, left on desktop, centered on mobile */}
-            <div className="absolute top-6 md:top-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 z-20">
-                <Logo width={55} height={55} className="md:w-[70px] md:h-[70px]" />
+            <div className="absolute top-6 md:top-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 z-20 pointer-events-none">
+                <Logo width={55} height={55} className="md:w-[70px] md:h-[70px] pointer-events-auto" />
             </div>
 
             <div className="z-10 flex flex-col items-center max-w-sm md:max-w-xl mx-auto w-full px-4">
@@ -119,7 +126,9 @@ export default function Home() {
         </section>
         
         <Footer />
+        <div className="md:hidden h-16"></div> {/* Spacer for BottomNav */}
       </main>
+      <BottomNav />
     </div>
   )
 }
