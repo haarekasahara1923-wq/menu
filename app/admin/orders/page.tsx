@@ -220,9 +220,14 @@ export default function AdminOrders() {
                   {/* WhatsApp Share Button */}
                   <button 
                     onClick={() => {
-                        const items = selectedOrder.items.map((i: any) => `${i.quantity}x ${i.dishName} - ₹${i.totalPrice}`).join('%0A')
-                        const message = encodeURIComponent(`*${restaurantInfo?.name || 'Swad Anusar'} Receipt*%0A--------------------------%0A*Order:* #${selectedOrder.orderNumber}%0A*Customer:* ${selectedOrder.customerName}%0A--------------------------%0A${items}%0A--------------------------%0A*TOTAL: ₹${selectedOrder.total}*%0A%0A_Thank you for ordering!_`)
-                        window.open(`https://wa.me/${selectedOrder.customerPhone}?text=${message}`, '_blank')
+                        const items = selectedOrder.items.map((i: any) => `${i.quantity}x ${i.dishName} - ₹${i.totalPrice}`).join('\n')
+                        const message = encodeURIComponent(`*${restaurantInfo?.name || 'Swad Anusar'} Receipt*\n--------------------------\n*Order:* #${selectedOrder.orderNumber}\n*Customer:* ${selectedOrder.customerName}\n--------------------------\n${items}\n--------------------------\n*TOTAL: ₹${selectedOrder.total}*\n\n_Thank you for ordering!_`)
+                        let phoneStr = selectedOrder.customerPhone || '';
+                        let formattedPhone = phoneStr.replace(/\D/g, '');
+                        if (formattedPhone.length === 10) {
+                            formattedPhone = '91' + formattedPhone;
+                        }
+                        window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank')
                     }}
                     className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-[#128C7E] transition-all flex items-center justify-center gap-3"
                   >

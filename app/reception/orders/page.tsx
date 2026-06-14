@@ -264,7 +264,12 @@ export default function ReceptionOrders() {
                             const msg = encodeURIComponent(
                               `Namaste ${order.customerName}! Your order #${order.orderNumber} from Swad Anusar is ready. Enjoy your meal! 🥘`
                             )
-                            window.open(`https://wa.me/${order.customerPhone}?text=${msg}`, '_blank')
+                            let phoneStr = order.customerPhone || '';
+                            let formattedPhone = phoneStr.replace(/\D/g, '');
+                            if (formattedPhone.length === 10) {
+                                formattedPhone = '91' + formattedPhone;
+                            }
+                            window.open(`https://wa.me/${formattedPhone}?text=${msg}`, '_blank')
                           }}
                           className="bg-[#25D366] text-white p-2.5 rounded-xl hover:bg-[#128C7E] transition-all"
                         >
