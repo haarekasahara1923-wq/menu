@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
 import { Logo } from '@/components/Logo'
+import { generateWhatsAppReceipt } from '@/lib/receiptFormatter'
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([])
@@ -220,8 +221,7 @@ export default function AdminOrders() {
                   {/* WhatsApp Share Button */}
                   <button 
                     onClick={() => {
-                        const items = selectedOrder.items.map((i: any) => `${i.quantity}x ${i.dishName} - ₹${i.totalPrice}`).join('\n')
-                        const message = encodeURIComponent(`*${restaurantInfo?.name || 'Swad Anusar'} Receipt*\n--------------------------\n*Order:* #${selectedOrder.orderNumber}\n*Customer:* ${selectedOrder.customerName}\n--------------------------\n${items}\n--------------------------\n*TOTAL: ₹${selectedOrder.total}*\n\n_Thank you for ordering!_`)
+                        const message = encodeURIComponent(generateWhatsAppReceipt(selectedOrder, restaurantInfo))
                         let phoneStr = selectedOrder.customerPhone || '';
                         let formattedPhone = phoneStr.replace(/\D/g, '');
                         if (formattedPhone.length === 10) {

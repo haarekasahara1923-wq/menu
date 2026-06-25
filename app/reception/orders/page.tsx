@@ -8,11 +8,13 @@ import {
   MapPin, User, Phone, ChefHat, Bell
 } from 'lucide-react'
 import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
+import { generateWhatsAppReceipt } from '@/lib/receiptFormatter'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
 export default function ReceptionOrders() {
   const [orders, setOrders] = useState<any[]>([])
+  const [restaurantInfo, setRestaurantInfo] = useState<any>(null)
 
   // ── Helper: apply a status update by order id ──────────────────
   const applyStatusUpdate = useCallback((id: string, status: string) => {
@@ -54,9 +56,13 @@ export default function ReceptionOrders() {
 
   // ── Initial load ────────────────────────────────────────────────
   useEffect(() => {
-    fetch('/api/reception/orders')
-      .then(res => res.json())
-      .then(data => setOrders(data))
+    Promise.all([
+      fetch('/api/reception/orders').then(res => res.json()),
+      fetch('/api/admin/settings').then(res => res.json()).catch(() => ({}))
+    ]).then(([ordersData, settingsData]) => {
+      setOrders(ordersData)
+      setRestaurantInfo(settingsData)
+    }).catch(() => {})
   }, [])
 
   // ── Periodic re-sync every 15s as safety net ─────────────────────
@@ -277,8 +283,20 @@ export default function ReceptionOrders() {
                         </button>
 
                         {/* Receipt */}
-                        <button className="bg-white border border-border p-2.5 rounded-xl hover:bg-border/20 transition-colors">
-                          <Receipt className="w-4 h-4 text-text-secondary" />
+                        <button 
+                          onClick={() => {
+                            const message = encodeURIComponent(generateWhatsAppReceipt(order, restaurantInfo))
+                            let phoneStr = order.customerPhone || '';
+                            let formattedPhone = phoneStr.replace(/\D/g, '');
+                            if (formattedPhone.length === 10) {
+                                formattedPhone = '91' + formattedPhone;
+                            }
+                            window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank')
+                          }}
+                          className="bg-white border border-border p-2.5 rounded-xl hover:bg-[#25D366]/10 hover:border-[#25D366] transition-colors"
+                          title="Share Bill via WhatsApp"
+                        >
+                          <Receipt className="w-4 h-4 text-text-secondary hover:text-[#25D366]" />
                         </button>
                       </div>
                     </motion.div>
