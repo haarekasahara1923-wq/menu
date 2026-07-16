@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
@@ -11,7 +11,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [checkingSession, setCheckingSession] = useState(true)
   const router = useRouter()
+
+  useEffect(() => {
+    const checkActiveSession = async () => {
+      try {
+        const sessionRes = await fetch('/api/auth/session')
+        const session = await sessionRes.json()
+        const role = session?.user?.role
+
+        if (role) {
+          if (role === 'admin') router.push('/admin')
+          else if (role === 'reception') router.push('/reception/orders')
+          else if (role === 'kitchen') router.push('/kitchen/orders')
+          else router.push('/')
+        } else {
+          setCheckingSession(false)
+        }
+      } catch (err) {
+        setCheckingSession(false)
+      }
+    }
+    checkActiveSession()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,6 +61,14 @@ export default function LoginPage() {
         else if (role === 'kitchen') router.push('/kitchen/orders')
         else router.push('/')
     }
+  }
+
+  if (checkingSession) {
+    return (
+      <div className="min-h-screen bg-[#FFF8F0] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+      </div>
+    )
   }
 
   return (
