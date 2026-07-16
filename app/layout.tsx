@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
+import SessionPersist from "@/components/SessionPersist";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter-next" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair-next" });
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans min-h-screen bg-background`}>
+          <SessionPersist />
           {children}
         <Toaster position="top-center" richColors />
       </body>
