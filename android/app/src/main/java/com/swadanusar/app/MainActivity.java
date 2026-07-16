@@ -1,4 +1,4 @@
-package com.menu.app;
+package com.swadanusar.app;
 
 import com.getcapacitor.BridgeActivity;
 

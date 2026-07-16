@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.menu.app',
+  appId: 'com.swadanusar.app',
   appName: 'Menu App',
   webDir: 'public',
   server: {

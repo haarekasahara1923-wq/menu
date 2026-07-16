@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Menu App</string>
-    <string name="title_activity_main">Menu App</string>
-    <string name="package_name">com.menu.app</string>
-    <string name="custom_url_scheme">com.menu.app</string>
+    <string name="app_name">Swadanusar</string>
+    <string name="title_activity_main">Swadanusar</string>
+    <string name="package_name">com.swadanusar.app</string>
+    <string name="custom_url_scheme">com.swadanusar.app</string>
 </resources>

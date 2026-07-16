@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -32,6 +33,8 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
+      {/* ── New Order Alert Overlay ── */}
+      <NewOrderAlert />
       <header className="mb-10">
         <h1 className="text-4xl font-bold font-playfair text-primary">Admin Dashboard</h1>
         <p className="text-text-secondary">Overview of Swad Anusar operations</p>

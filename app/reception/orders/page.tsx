@@ -11,6 +11,7 @@ import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
 import { generateWhatsAppReceipt } from '@/lib/receiptFormatter'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
 
 export default function ReceptionOrders() {
   const [orders, setOrders] = useState<any[]>([])
@@ -140,6 +141,8 @@ export default function ReceptionOrders() {
 
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-4 lg:p-8 font-poppins">
+      {/* ── New Order Alert Overlay ── */}
+      <NewOrderAlert />
       <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold font-playfair text-primary italic">Reception Panel</h1>

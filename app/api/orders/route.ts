@@ -73,14 +73,21 @@ export async function POST(req: NextRequest) {
 
     await db.insert(orderItems).values(itemsToInsert)
 
-    // 4. Publish Real-time Event
+    // 4. Publish Real-time Event (include items for alert display)
+    const payloadItems = items.map((item: any) => ({
+        dishName: item.name,
+        quantity: item.quantity,
+        sizeLabel: item.sizeLabel ?? '',
+    }))
+
     const payload = {
         id: orderId,
         orderNumber,
         deliveryType,
         tableNumber,
         customerName: name,
-        total: total, // For reorder, we just send the new items total to notify
+        total: total,
+        items: payloadItems,
         status: 'pending',
         isUpdate: isReorder,
         createdAt: new Date().toISOString()

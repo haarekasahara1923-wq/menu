@@ -5,6 +5,7 @@ import { useOrderStream } from '@/components/realtime/useOrderStream'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, CheckCircle2, Flame, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
+import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
 
 export default function KitchenOrders() {
   const [orders, setOrders] = useState<any[]>([])
@@ -21,8 +22,8 @@ export default function KitchenOrders() {
         // Deduplicate: ignore if we already have this order in state
         setOrders(prev => {
             if (prev.some(o => o.id === payload.id)) return prev
+            // NewOrderAlert handles its own sound — toast just for info log
             toast.info(`New Order: #${payload.orderNumber}`)
-            playChime()
             return [payload, ...prev]
         })
     } else if (event.channel === 'orders:updated') {
@@ -78,6 +79,8 @@ export default function KitchenOrders() {
 
   return (
     <div className="min-h-screen bg-[#1A0A00] text-white p-6">
+      {/* ── New Order Alert Overlay ── */}
+      <NewOrderAlert />
       <header className="flex justify-between items-center mb-8">
         <div>
             <h1 className="text-3xl font-bold font-playfair text-primary-light flex items-center gap-2">

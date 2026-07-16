@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
 import { Logo } from '@/components/Logo'
 import { generateWhatsAppReceipt } from '@/lib/receiptFormatter'
+import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([])
@@ -57,6 +58,8 @@ export default function AdminOrders() {
 
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
+      {/* ── New Order Alert Overlay ── */}
+      <NewOrderAlert />
       <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm text-text-secondary mb-1">
