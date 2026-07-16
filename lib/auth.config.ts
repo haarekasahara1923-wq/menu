@@ -7,6 +7,11 @@ export const authConfig = {
     // and add it in the main auth.ts to avoid Edge issues
     Credentials({}), 
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+    updateAge: 24 * 60 * 60, // 24 hours in seconds
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) (token as any).role = (user as any).role

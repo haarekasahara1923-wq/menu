@@ -7,7 +7,15 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://menu-gamma-three.vercel.app',
     cleartext: true
-  }
+  },
+  plugins: {
+    CapacitorCookies: {
+      enabled: true,
+    },
+    CapacitorHttp: {
+      enabled: true,
+    },
+  },
 };
 
 export default config;
