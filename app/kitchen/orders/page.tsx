@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useOrderStream } from '@/components/realtime/useOrderStream'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Clock, CheckCircle2, Flame, AlertCircle } from 'lucide-react'
+import { Clock, CheckCircle2, Flame, AlertCircle, Home, LogOut } from 'lucide-react'
 import { toast } from 'sonner'
 import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
+import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 
 export default function KitchenOrders() {
   const [orders, setOrders] = useState<any[]>([])
@@ -81,7 +83,7 @@ export default function KitchenOrders() {
     <div className="min-h-screen bg-[#1A0A00] text-white p-6">
       {/* ── New Order Alert Overlay ── */}
       <NewOrderAlert />
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
             <h1 className="text-3xl font-bold font-playfair text-primary-light flex items-center gap-2">
                 <Flame className="w-8 h-8" />
@@ -89,9 +91,27 @@ export default function KitchenOrders() {
             </h1>
             <p className="text-gray-400 text-sm">Active Orders Queue</p>
         </div>
-        <div className="text-right">
-            <p className="text-2xl font-bold">{orders.length}</p>
-            <p className="text-xs text-gray-400 uppercase">Pending</p>
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex gap-2">
+              <Link 
+                href="/" 
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-xs font-bold text-gray-300 hover:text-white transition-all"
+              >
+                <Home className="w-4 h-4" />
+                Home
+              </Link>
+              <button 
+                onClick={() => signOut({ callbackUrl: '/auth/login' })}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-950/40 hover:bg-red-900/40 border border-red-500/30 rounded-2xl text-xs font-bold text-red-400 hover:text-red-300 transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
+            <div className="text-right">
+                <p className="text-2xl font-bold">{orders.length}</p>
+                <p className="text-xs text-gray-400 uppercase">Pending</p>
+            </div>
         </div>
       </header>
 

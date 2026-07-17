@@ -5,13 +5,15 @@ import { useOrderStream } from '@/components/realtime/useOrderStream'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ShoppingBag, CheckCircle, Receipt, Clock,
-  MapPin, User, Phone, ChefHat, Bell
+  MapPin, User, Phone, ChefHat, Bell, Home, LogOut
 } from 'lucide-react'
 import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon'
 import { generateWhatsAppReceipt } from '@/lib/receiptFormatter'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
+import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 
 export default function ReceptionOrders() {
   const [orders, setOrders] = useState<any[]>([])
@@ -148,19 +150,37 @@ export default function ReceptionOrders() {
           <h1 className="text-4xl font-bold font-playfair text-primary italic">Reception Panel</h1>
           <p className="text-text-secondary mt-1 text-sm">Manage incoming orders and delivery</p>
         </div>
-        <div className="flex gap-3">
-          <div className="bg-white px-5 py-3 rounded-2xl shadow-sm border border-border text-center">
-            <p className="text-[10px] uppercase font-bold text-text-secondary opacity-60">Total</p>
-            <p className="text-xl font-bold">{orders.length}</p>
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-start md:justify-end">
+          <div className="flex gap-2">
+            <Link 
+              href="/" 
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-border rounded-2xl text-xs font-bold text-text-secondary hover:text-primary transition-all shadow-sm hover:shadow-md"
+            >
+              <Home className="w-4 h-4" />
+              Home
+            </Link>
+            <button 
+              onClick={() => signOut({ callbackUrl: '/auth/login' })}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 border border-red-200 rounded-2xl text-xs font-bold text-red-600 hover:bg-red-100 transition-all shadow-sm hover:shadow-md"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
           </div>
-          {pendingReady > 0 && (
-            <div className="bg-green-500 text-white px-5 py-3 rounded-2xl shadow-lg text-center animate-pulse">
-              <p className="text-[10px] uppercase font-bold opacity-80">Ready to Deliver</p>
-              <p className="text-xl font-bold flex items-center gap-1 justify-center">
-                <Bell className="w-4 h-4" />{pendingReady}
-              </p>
+          <div className="flex gap-3">
+            <div className="bg-white px-5 py-3 rounded-2xl shadow-sm border border-border text-center">
+              <p className="text-[10px] uppercase font-bold text-text-secondary opacity-60">Total</p>
+              <p className="text-xl font-bold">{orders.length}</p>
             </div>
-          )}
+            {pendingReady > 0 && (
+              <div className="bg-green-500 text-white px-5 py-3 rounded-2xl shadow-lg text-center animate-pulse">
+                <p className="text-[10px] uppercase font-bold opacity-80">Ready to Deliver</p>
+                <p className="text-xl font-bold flex items-center gap-1 justify-center">
+                  <Bell className="w-4 h-4" />{pendingReady}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 

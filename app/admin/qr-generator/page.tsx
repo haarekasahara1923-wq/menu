@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Download, Share2, Copy, Check, ExternalLink } from 'lucide-react'
+import { Download, Share2, Copy, Check, ExternalLink, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import Link from 'next/link'
 
 export default function QRGenerator() {
   const [qrUrl, setQrUrl] = useState('')
@@ -62,9 +63,14 @@ export default function QRGenerator() {
 
   return (
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
-      <header className="mb-10 text-center max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold font-playfair text-primary mb-2 italic">Welcome to Swadanusar</h1>
-        <p className="text-text-secondary">Enjoy the delicious food</p>
+      <header className="mb-10 max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 text-sm text-text-secondary mb-1">
+          <Link href="/admin" className="hover:text-primary transition-colors">Dashboard</Link>
+          <ChevronRight className="w-3 h-3" />
+          <span>QR Generator</span>
+        </div>
+        <h1 className="text-4xl font-bold font-playfair text-primary">QR Generator</h1>
+        <p className="text-text-secondary mt-1">Branded menu QR codes for tables and marketing</p>
       </header>
 
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">

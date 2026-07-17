@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import { 
   TrendingUp, Users, ShoppingBag, Package, 
-  ChevronRight, AlertTriangle, Settings 
+  ChevronRight, AlertTriangle, Settings, Home, LogOut
 } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { NewOrderAlert } from '@/components/notifications/NewOrderAlert'
+import { signOut } from 'next-auth/react'
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -35,9 +36,27 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#FFF8F0] p-6 lg:p-10 font-poppins">
       {/* ── New Order Alert Overlay ── */}
       <NewOrderAlert />
-      <header className="mb-10">
-        <h1 className="text-4xl font-bold font-playfair text-primary">Admin Dashboard</h1>
-        <p className="text-text-secondary">Overview of Swad Anusar operations</p>
+      <header className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-4xl font-bold font-playfair text-primary">Admin Dashboard</h1>
+          <p className="text-text-secondary">Overview of Swad Anusar operations</p>
+        </div>
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Link 
+            href="/" 
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-3 bg-white border border-border rounded-2xl text-sm font-bold text-text-secondary hover:text-primary transition-all shadow-sm hover:shadow-md"
+          >
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <button 
+            onClick={() => signOut({ callbackUrl: '/auth/login' })}
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-3 bg-red-50 border border-red-200 rounded-2xl text-sm font-bold text-red-600 hover:bg-red-100 transition-all shadow-sm hover:shadow-md"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
