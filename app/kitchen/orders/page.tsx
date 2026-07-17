@@ -101,7 +101,12 @@ export default function KitchenOrders() {
                 Home
               </Link>
               <button 
-                onClick={() => signOut({ callbackUrl: '/auth/login' })}
+                onClick={() => {
+                  localStorage.removeItem('cached_session_cookie_name')
+                  localStorage.removeItem('cached_session_cookie_val')
+                  sessionStorage.removeItem('restore_attempted')
+                  signOut({ callbackUrl: '/auth/login' })
+                }}
                 className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-950/40 hover:bg-red-900/40 border border-red-500/30 rounded-2xl text-xs font-bold text-red-400 hover:text-red-300 transition-all"
               >
                 <LogOut className="w-4 h-4" />

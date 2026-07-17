@@ -160,7 +160,12 @@ export default function ReceptionOrders() {
               Home
             </Link>
             <button 
-              onClick={() => signOut({ callbackUrl: '/auth/login' })}
+              onClick={() => {
+                localStorage.removeItem('cached_session_cookie_name')
+                localStorage.removeItem('cached_session_cookie_val')
+                sessionStorage.removeItem('restore_attempted')
+                signOut({ callbackUrl: '/auth/login' })
+              }}
               className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 border border-red-200 rounded-2xl text-xs font-bold text-red-600 hover:bg-red-100 transition-all shadow-sm hover:shadow-md"
             >
               <LogOut className="w-4 h-4" />

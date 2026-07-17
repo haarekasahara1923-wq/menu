@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import SessionPersist from "@/components/SessionPersist";
+import MobileBackButtonHandler from "@/components/MobileBackButtonHandler";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter-next" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair-next" });
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} ${poppins.variable} font-sans min-h-screen bg-background`}>
           <SessionPersist />
+          <MobileBackButtonHandler />
           {children}
         <Toaster position="top-center" richColors />
       </body>
