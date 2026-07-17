@@ -22,10 +22,10 @@ export default function LoginPage() {
         const role = session?.user?.role
 
         if (role) {
-          if (role === 'admin') router.push('/admin')
-          else if (role === 'reception') router.push('/reception/orders')
-          else if (role === 'kitchen') router.push('/kitchen/orders')
-          else router.push('/')
+          if (role === 'admin') router.replace('/admin')
+          else if (role === 'reception') router.replace('/reception/orders')
+          else if (role === 'kitchen') router.replace('/kitchen/orders')
+          else router.replace('/')
         } else {
           setCheckingSession(false)
         }
@@ -56,10 +56,10 @@ export default function LoginPage() {
         const session = await sessionRes.json()
         const role = session?.user?.role
 
-        if (role === 'admin') router.push('/admin')
-        else if (role === 'reception') router.push('/reception/orders')
-        else if (role === 'kitchen') router.push('/kitchen/orders')
-        else router.push('/')
+        if (role === 'admin') router.replace('/admin')
+        else if (role === 'reception') router.replace('/reception/orders')
+        else if (role === 'kitchen') router.replace('/kitchen/orders')
+        else router.replace('/')
     }
   }
 
